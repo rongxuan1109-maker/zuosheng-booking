@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<title>佐升物理治療所 · 線上預約</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 44 44' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='44' height='44' fill='%23f3ede1'/%3E%3Cpath d='M22 6C22 6 27 15 27 22C27 29 22 38 22 38C22 38 17 29 17 22C17 15 22 6 22 6Z' stroke='%23c08a52' stroke-width='1.8' fill='none'/%3E%3Cpath d='M6 22C6 22 15 17 22 17C29 17 38 22 38 22C38 22 29 27 22 27C15 27 6 22 6 22Z' stroke='%23c08a52' stroke-width='1.8' fill='none'/%3E%3Ccircle cx='22' cy='22' r='2.5' fill='%23c08a52' opacity='.7'/%3E%3C/svg%3E">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@200;300;400;500&family=Noto+Sans+TC:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:light only;
+  --ink:#11161c;
+  --paper:#e2eaf2;
+  --warm:#5689bc;
+  --accent:#3b5977;
+  --muted:#768799;
+  --glow:#c5d6e8;
+  --surface:#eef4fa;
+  --deep:#131e29;
+  --orange:#2f80d2;
+  --border:rgba(86,137,188,.28);
+  --border-hover:rgba(86,137,188,.6);
+  --radius:4px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{background:#e2eaf2 !important;}
+body{
+  font-family:'Noto Serif TC',serif;
+  background:#e2eaf2;
+  color:#11161c;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  pointer-events:none;z-index:9999;opacity:.25;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E");
+}
+
+/* ── HEADER(奶茶綠新版) ── */
+.hd-stripe{display:flex;height:8px;}
+.hd-stripe i{flex:1;}
+.hd-stripe i:nth-child(1){background:#d97b8b;}
+.hd-stripe i:nth-child(2){background:#6b8e4e;}
+.hd-stripe i:nth-child(3){background:#4e8e96;}
+.hd-stripe i:nth-child(4){background:#438ed9;}
+.hd-stripe i:nth-child(5){background:#428ad3;}
+.header{
+  background:linear-gradient(90deg,#eef0dd,#e7eef5);
+  padding:16px 22px;
+  display:flex;align-items:center;gap:16px;
+  position:relative;overflow:hidden;
+  border-bottom:1px solid rgba(107,142,78,.15);
+}
+.hd-deco{position:absolute;border-radius:50%;pointer-events:none;}
+.hd-deco.y{width:150px;height:150px;background:rgba(111,169,228,.28);right:60px;top:-40px;}
+.hd-deco.p{width:130px;height:130px;background:rgba(224,160,166,.25);right:-35px;bottom:-45px;}
+.logo{
+  background:#fff;border-radius:30px;
+  padding:10px 26px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 8px rgba(52,70,88,.08);
+  position:relative;z-index:1;
+}
+.logo img{display:block;}
+.header-text{position:relative;z-index:1;flex:1;}
+.header-text h1{
+  font-size:20px;font-weight:700;
+  color:#3d5226;letter-spacing:2px;
+  font-family:'Noto Serif TC',serif;
+}
+.header-text p{
+  font-size:12px;color:#6b8e4e;
+  letter-spacing:1px;margin-top:3px;
+}
+.hd-badge{
+  background:#5a7a40;color:#fff;
+  font-size:12.5px;padding:7px 16px;border-radius:24px;
+  white-space:nowrap;position:relative;z-index:1;letter-spacing:1px;
+}
+@media (max-width:640px){
+  html,body{background:#ecf2f7 !important;}
+  .header{padding:12px 14px;gap:10px;}
+  .logo{padding:7px 13px;border-radius:22px;}
+  .logo img{height:32px !important;}
+  .header-text h1{font-size:16px;letter-spacing:1px;white-space:nowrap;}
+  .header-text p{font-size:10.5px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .hd-badge{font-size:11px;padding:5px 10px;letter-spacing:0;}
+  .hd-deco.y{width:100px;height:100px;right:40px;}
+  .hd-deco.p{width:90px;height:90px;}
+}
+
+/* ── CONTAINER ── */
+.container{max-width:600px;margin:0 auto;padding:28px 16px 60px;}
+
+/* ── PROGRESS ── */
+.progress{display:flex;align-items:center;margin-bottom:32px;}
+.prog-step{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1;}
+.prog-circle{
+  width:30px;height:30px;border-radius:50%;
+  border:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:500;
+  font-family:'Cormorant Garamond',serif;
+  background:var(--surface);color:var(--muted);
+  transition:all .4s;
+}
+.prog-circle.active{
+  border-color:var(--warm);
+  background:var(--warm);color:#e2eaf2;
+}
+.prog-circle.done{
+  border-color:var(--warm);
+  background:var(--glow);color:var(--accent);
+}
+.prog-label{font-size:10px;color:var(--muted);text-align:center;letter-spacing:.5px;}
+.prog-label.active{color:var(--warm);font-weight:500;}
+.prog-line{flex:1;height:1px;background:var(--border);margin-bottom:15px;transition:background .4s;}
+.prog-line.done{background:rgba(86,137,188,.5);}
+
+/* ── CARDS ── */
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  padding:22px 20px;margin-bottom:14px;
+  transition:border-color .3s;
+}
+.card-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:18px;font-weight:400;
+  color:var(--ink);margin-bottom:18px;
+  letter-spacing:.5px;
+  padding-bottom:12px;
+  border-bottom:1px solid var(--border);
+}
+.section-sub{
+  font-size:12px;color:var(--muted);
+  margin-bottom:14px;margin-top:-10px;
+  font-weight:300;letter-spacing:.5px;
+}
+
+/* ── TYPE SELECT ── */
+.type-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.type-card{
+  border:1px solid var(--border);
+  padding:22px 16px;cursor:pointer;
+  text-align:center;transition:all .3s;
+  position:relative;overflow:hidden;
+  background:var(--surface);
+}
+.type-card::before{
+  content:'';position:absolute;inset:0;
+  background:var(--glow);
+  transform:translateY(101%);
+  transition:transform .4s cubic-bezier(.7,0,.3,1);
+}
+.type-card:hover::before,.type-card.selected::before{transform:translateY(0);}
+.type-card:hover,.type-card.selected{border-color:var(--warm);}
+.type-icon{font-size:26px;margin-bottom:10px;position:relative;z-index:1;}
+.type-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px;font-weight:400;color:var(--ink);
+  position:relative;z-index:1;letter-spacing:1px;
+}
+.type-desc{
+  font-size:11px;color:var(--muted);margin-top:5px;
+  font-weight:300;position:relative;z-index:1;
+}
+
+/* ── SERVICE LIST ── */
+.service-list{display:flex;flex-direction:column;gap:10px;}
+.service-item{
+  border:1px solid var(--border);
+  padding:15px 16px;cursor:pointer;
+  display:flex;align-items:center;gap:14px;
+  transition:all .3s;position:relative;overflow:hidden;
+  background:var(--surface);
+}
+.service-item::before{
+  content:'';position:absolute;inset:0;
+  background:var(--glow);
+  transform:translateX(-101%);
+  transition:transform .35s cubic-bezier(.7,0,.3,1);
+}
+.service-item:hover::before,.service-item.selected::before{transform:translateX(0);}
+.service-item:hover,.service-item.selected{border-color:var(--warm);transform:translateX(2px);}
+.service-dot{
+  width:10px;height:10px;border-radius:50%;
+  flex-shrink:0;position:relative;z-index:1;
+}
+.service-info{flex:1;position:relative;z-index:1;}
+.service-name{font-size:14px;font-weight:400;color:var(--ink);}
+.service-time{font-size:12px;color:var(--muted);margin-top:3px;font-weight:300;}
+
+/* ── THERAPIST ── */
+.therapist-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.th-card{
+  border:1px solid var(--border);
+  padding:14px 12px;cursor:pointer;
+  display:flex;align-items:center;gap:10px;
+  transition:all .3s;background:var(--surface);
+  position:relative;overflow:hidden;
+}
+.th-card::before{
+  content:'';position:absolute;inset:0;
+  background:var(--glow);
+  transform:translateX(-101%);
+  transition:transform .35s cubic-bezier(.7,0,.3,1);
+}
+.th-card:hover::before,.th-card.selected::before{transform:translateX(0);}
+.th-card:hover,.th-card.selected{border-color:var(--warm);transform:translateX(2px);}
+.th-avatar{
+  width:38px;height:38px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;
+  font-weight:500;font-size:15px;flex-shrink:0;
+  position:relative;z-index:1;
+  border:1px solid var(--border);
+}
+.th-name{
+  font-size:13px;font-weight:400;color:var(--ink);
+  position:relative;z-index:1;
+}
+.th-spec{
+  font-size:11px;color:var(--muted);margin-top:2px;
+  font-weight:300;position:relative;z-index:1;
+}
+/* ── 拳套卡:長方形收在圓心,大圓照片當結尾 ── */
+.th-card.glove{overflow:visible;height:92px;margin:4px 56px 4px 0;padding:14px 68px 14px 16px;display:flex;align-items:center;}
+.th-card.glove::before{display:none;}
+.th-card.glove:hover,.th-card.glove.selected{background:var(--glow);}
+.th-avatar.glove-avatar{position:absolute;right:0;top:50%;transform:translateY(-50%);width:116px;height:116px;font-size:30px;overflow:hidden;z-index:2;}
+@media (max-width:640px){
+  .therapist-grid{grid-template-columns:1fr !important;gap:18px 0 !important;}
+  .th-card.glove{height:84px;margin-right:50px;padding-right:58px;}
+  .th-avatar.glove-avatar{width:100px;height:100px;font-size:26px;}
+}
+
+/* ── CALENDAR ── */
+/* ── 初診問卷(奶茶風設計稿) ── */
+.q-card{position:relative;overflow:hidden;}
+.q-deco1{position:absolute;width:130px;height:130px;border-radius:50%;background:rgba(190,214,166,.25);top:-45px;right:-40px;pointer-events:none;}
+.q-deco2{position:absolute;width:150px;height:150px;border-radius:50%;background:rgba(127,181,235,.18);bottom:-55px;left:-45px;pointer-events:none;}
+.q-deco1.pk{background:rgba(230,185,190,.35);}
+.q-head{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);position:relative;z-index:1;}
+.q-icon{width:34px;height:34px;border-radius:9px;background:#6b8e4e;color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.q-title{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--ink);letter-spacing:1px;}
+.q-pill{background:#e2ecd8;color:#5a7a40;font-size:11px;padding:3px 10px;border-radius:20px;white-space:nowrap;}
+.q-sec{display:flex;align-items:center;gap:8px;margin:18px 0 12px;font-size:14px;font-weight:500;color:var(--ink);position:relative;z-index:1;}
+.q-num{width:22px;height:22px;border-radius:50%;color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.q-sec .q-line{flex:1;border-top:1.5px dashed var(--border);}
+.q-box{border:1px solid var(--border);border-radius:12px;background:var(--surface);padding:10px 14px 12px;margin-bottom:12px;position:relative;z-index:1;}
+.q-plain{margin-bottom:14px;position:relative;z-index:1;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.q-plain .q-label{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;margin-bottom:0;padding:4px 13px;border-radius:20px;flex-shrink:0;}
+.q-plain input,.q-plain select{flex:1;min-width:140px;}
+.q-plain .q-pills{flex:1;min-width:200px;}
+.q-plain textarea{width:100%;}
+.q-plain.stack{display:block;}
+.q-plain.stack .q-label{margin-bottom:6px;}
+.q-plain #f-by,.q-plain #f-bm,.q-plain #f-bd{min-width:0;flex:1 1 0;width:auto;}
+.q-plain.b textarea{border:1px solid var(--border);border-radius:12px;padding:10px 12px;background:var(--surface);}
+.q-plain.b textarea:focus{border-color:#5b8a94;}
+/* ── 預約成功頁 ── */
+.sc-wrap{text-align:center;position:relative;z-index:1;font-family:'Noto Sans TC',sans-serif;}
+.sc-wrap .sc-title{font-family:'Noto Serif TC',serif;}
+.sc-wrap .cf-time .t{font-family:'Noto Sans TC',sans-serif;}
+.sc-wrap .cf-cal .d{font-family:'Noto Sans TC',sans-serif;font-weight:700;}
+.sc-wrap .btn span{font-family:'Noto Sans TC',sans-serif;}
+.sc-card .cf-cal{border-color:#438ed9;}
+.sc-card .cf-cal.rt{border-color:#b5645a;}
+.sc-circle{width:86px;height:86px;border-radius:50%;margin:8px auto 18px;display:flex;align-items:center;justify-content:center;}
+.sc-circle.nw{background:#6b8e4e;}
+.sc-circle.rt{background:#b5645a;}
+.sc-title{font-size:30px;font-weight:700;color:var(--ink);font-family:'Noto Serif TC',serif;letter-spacing:4px;margin-bottom:12px;}
+.sc-sub{font-size:14px;color:var(--muted);line-height:1.9;margin-bottom:18px;}
+.sc-card{display:flex;align-items:center;gap:16px;background:#f7fbff;border:1.5px solid rgba(86,137,188,.45);border-radius:16px;padding:16px;text-align:left;margin-bottom:14px;}
+.cf-cal.rt .m{background:#b5645a;}
+.cf-type.rt{background:#f5d9dc;color:#b5645a;}
+.sc-flow{border:1px solid var(--border);border-radius:16px;background:var(--surface);padding:18px 14px 14px;margin-bottom:14px;font-family:'Noto Sans TC',sans-serif;}
+.sc-flow-title{display:flex;align-items:center;justify-content:center;gap:8px;font-size:17px;font-weight:700;color:var(--ink);margin-bottom:14px;}
+.sc-bang{width:22px;height:22px;border-radius:50%;background:#438ed9;color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sc-opts{display:flex;gap:8px;align-items:stretch;}
+.sc-opt{flex:1;border-radius:14px;padding:14px 10px;display:flex;flex-direction:column;align-items:center;gap:7px;min-width:0;}
+.sc-opt.gg{background:#eaf1e2;}
+.sc-opt.yy{background:#d6e7f8;}
+.sc-opt img{height:112px;width:auto;max-width:100%;object-fit:contain;border-radius:10px;}
+.sc-opt .h{font-size:14.5px;font-weight:700;}
+.sc-opt.gg .h{color:#5a7a40;}
+.sc-opt.yy .h{color:#2670ba;}
+.sc-opt .d{font-size:13.5px;color:var(--ink);line-height:1.7;}
+.sc-opt .fee{background:#fff;border-radius:14px;font-size:11.5px;padding:3px 11px;color:#8a6d1f;}
+.sc-or{align-self:center;color:#6d8dad;font-size:14px;flex-shrink:0;}
+.sc-band{border-radius:14px;padding:13px 12px;font-size:14.5px;margin-top:12px;text-align:center;font-weight:700;display:flex;align-items:center;justify-content:center;gap:9px;}
+.sc-band.blue{background:#d9e8ec;color:#2e6b74;}
+.sc-band.pink{background:#f2d7da;color:#b04a56;}
+.sc-cash{display:inline-flex;width:26px;height:26px;border-radius:50%;background:#3d8a94;color:#fff;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex-shrink:0;}
+/* ── 確認預約頁 ── */
+.cf-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border);position:relative;z-index:1;}
+.cf-icon{width:34px;height:34px;border-radius:9px;background:#d98a2b;color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.cf-title{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--ink);letter-spacing:1px;}
+.cf-pill{background:#bfdaf4;color:#8a6d1f;font-size:11px;padding:3px 10px;border-radius:20px;white-space:nowrap;}
+.cf-sum{display:flex;align-items:center;gap:16px;background:#f7fbff;border:1.5px solid rgba(86,137,188,.45);border-radius:14px;padding:16px;margin-bottom:14px;position:relative;z-index:1;flex-wrap:wrap;}
+.cf-cal{border:1.5px solid #28323c;border-radius:10px;overflow:hidden;text-align:center;width:74px;flex-shrink:0;background:#fff;}
+.cf-cal .m{background:#d98a2b;color:#fff;font-size:12px;padding:3px 0;letter-spacing:2px;}
+.cf-cal .d{font-size:30px;font-weight:700;color:var(--ink);line-height:1.15;padding-top:2px;}
+.cf-cal .w{font-size:12px;color:var(--muted);padding-bottom:4px;}
+.cf-time{flex:1;min-width:150px;}
+.cf-time .t{font-size:34px;font-family:'Noto Serif TC',serif;font-weight:700;color:var(--ink);line-height:1;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.cf-type{background:#e2ecd8;color:#5a7a40;font-size:12px;padding:3px 12px;border-radius:20px;font-family:'Noto Serif TC',serif;}
+.cf-type.rt{background:#dae7f4;color:#4176ab;}
+.cf-time .th{font-size:13px;color:var(--muted);margin-top:6px;}
+.cf-clinic{text-align:right;font-size:12px;color:var(--muted);line-height:1.7;margin-left:auto;}
+.cf-info{border:1px solid var(--border);border-radius:14px;background:var(--surface);padding:6px 16px;margin-bottom:14px;position:relative;z-index:1;}
+.cf-row{display:flex;align-items:center;padding:11px 0;border-bottom:1.5px dashed var(--border);gap:8px;}
+.cf-row:last-child{border-bottom:none;}
+.cf-lbl{font-size:12px;color:var(--muted);flex-shrink:0;min-width:58px;}
+.cf-val{flex:1;text-align:center;font-size:15px;font-weight:500;color:var(--ink);word-break:break-all;}
+.cf-trio{display:flex;border-bottom:1.5px dashed var(--border);}
+.cf-trio>div{flex:1;display:flex;align-items:center;padding:11px 0;gap:6px;min-width:0;}
+.cf-trio>div+div{border-left:1px solid var(--border);padding-left:10px;}
+@media (max-width:640px){
+  .cf-trio{flex-direction:column;border-bottom:none;}
+  .cf-trio>div{border-bottom:1.5px dashed var(--border);}
+  .cf-trio>div+div{border-left:none;padding-left:0;}
+  .cf-clinic{text-align:left;margin-left:90px;}
+}
+.q-plain.g .q-label{background:#e2ecd8;color:#5a7a40;}
+.q-plain.o .q-label{background:#cbdff4;color:#2670ba;}
+.q-plain.b .q-label{background:#e2eef1;color:#4a7680;}
+.q-plain input,.q-plain select,.q-plain textarea{border:none;background:transparent;width:100%;font-family:inherit;font-size:15px;color:var(--ink);outline:none;padding:6px 4px;}
+.q-plain input::placeholder,.q-plain textarea::placeholder{color:rgba(118,135,153,.45);}
+.q-label{font-size:12px;color:var(--ink);margin-bottom:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.q-label .req{color:var(--orange);}
+.q-eg{background:#bfdaf4;color:#8a6d1f;font-size:10.5px;padding:2px 8px;border-radius:12px;font-weight:400;}
+.q-box input,.q-box select,.q-box textarea{border:none;background:transparent;width:100%;font-family:inherit;font-size:15px;color:var(--ink);outline:none;padding:2px 0;}
+.q-box input::placeholder,.q-box textarea::placeholder{color:rgba(118,135,153,.45);}
+.q-two{display:grid;grid-template-columns:1fr 1fr;gap:12px;position:relative;z-index:1;}
+.q-three{display:flex;flex-direction:column;position:relative;z-index:1;}
+@media (max-width:640px){.q-three{grid-template-columns:1fr;gap:0;}}
+@media (max-width:640px){.q-two{grid-template-columns:1fr;gap:0;}}
+.q-pills{display:flex;gap:10px;}
+.q-pillbtn{flex:1;text-align:center;padding:11px 0;border:1px solid var(--border);border-radius:30px;cursor:pointer;font-size:14px;color:var(--muted);transition:all .2s;background:var(--surface);}
+.q-pillbtn.on-yes{background:#e2ecd8;border-color:#6b8e4e;color:#4a6a33;font-weight:500;}
+.q-pillbtn.on-no{background:#f5d9dc;border-color:#c97b84;color:#a5525c;font-weight:500;}
+.q-proxy{display:flex;gap:10px;align-items:flex-start;border:1.5px dashed #7fb2bd;background:#e9f3f5;border-radius:12px;padding:10px 12px;font-size:12.5px;color:#4a7680;margin-bottom:12px;line-height:1.6;position:relative;z-index:1;}
+.q-bang{width:20px;height:20px;border-radius:50%;background:#5b8a94;color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:1px;}
+.btn.qnext{background:#6b8e4e;border:none;box-shadow:0 5px 14px rgba(107,142,78,.35);border-radius:30px;}
+.btn.qnext:hover{background:#5f8043;}
+.btn.qnext span{color:#fff;}
+.cal-wrap{position:relative;overflow:hidden;border-radius:14px;}
+.cal-deco{position:absolute;border-radius:50%;pointer-events:none;}
+.cal-deco-y{width:150px;height:150px;background:rgba(127,181,235,.22);top:-55px;right:-45px;}
+.cal-deco-p{width:170px;height:170px;background:rgba(228,175,180,.16);bottom:-70px;left:-55px;}
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;position:relative;z-index:1;}
+.cal-nav{width:34px;height:34px;border:none;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .2s;}
+.cal-nav.nav-prev{background:#f3dadd;color:#b4636b;}
+.cal-nav.nav-next{background:#e2ecd8;color:#6b8e4e;}
+.cal-nav:hover{filter:brightness(.95);}
+.cal-title{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:500;color:var(--ink);letter-spacing:1px;}
+.today-pill{background:#d98a2b;color:#fff;font-size:11px;padding:3px 10px;border-radius:20px;margin-left:8px;vertical-align:2px;font-family:'Noto Serif TC',serif;font-weight:400;white-space:nowrap;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px 4px;position:relative;z-index:1;}
+.cal-day-lbl{text-align:center;font-size:11px;padding:6px 0;border-radius:20px;background:#dae4ef;color:#5e7388;font-weight:400;}
+.cal-day-lbl.sun{background:#f3dadd;color:#b4636b;}
+.cal-day-lbl.sat{background:#dcebee;color:#5b8a94;}
+.cal-day2{display:flex;flex-direction:column;align-items:center;height:56px;cursor:pointer;padding-top:2px;}
+.cal-day2 .cd-num{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .15s;}
+.cal-day2:hover:not(.off):not(.sel) .cd-num{background:var(--glow);}
+.cal-day2.off{cursor:default;}
+.cal-day2.off .cd-num{color:rgba(118,135,153,.45);}
+.cal-day2.off.sun .cd-num{color:#dcb3b8;}
+.cal-day2.sel .cd-num{background:#4171a1;color:#fff;font-weight:600;box-shadow:0 4px 10px rgba(65,113,161,.38);}
+.cal-day2.sel .cd-sub{color:#4171a1;}
+.cal-day2.today .cd-num{border:1.5px dashed #d98a2b;color:#d98a2b;font-weight:500;}
+.cal-day2.today .cd-sub{color:#d98a2b;}
+.cd-sub{font-size:9px;margin-top:1px;letter-spacing:1px;}
+.cd-dots{display:flex;gap:3px;margin-top:4px;height:5px;}
+.cd-dots i{width:5px;height:5px;border-radius:50%;display:block;}
+.cd-dots i.g{background:#6b8e4e;}
+.cd-dots i.o{background:#d98a2b;}
+.cal-legend{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 14px;font-size:11px;color:var(--muted);margin-top:12px;border-top:1px solid var(--border);padding-top:10px;position:relative;z-index:1;}
+.cal-legend .lg-dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:4px;vertical-align:1px;}
+.cal-legend .lg-dot.g{background:#6b8e4e;}
+.cal-legend .lg-dot.o{background:#d98a2b;}
+.cal-legend .lg-gray{color:rgba(118,135,153,.55);margin-right:2px;}
+
+/* ── TIME SLOTS ── */
+.time-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;}
+.time-slot{
+  border:1px solid var(--border);
+  padding:9px 4px;text-align:center;
+  font-size:12px;cursor:pointer;
+  transition:all .2s;background:var(--surface);
+  font-weight:300;color:var(--ink);
+}
+.time-slot:hover:not(.taken){
+  border-color:var(--warm);color:var(--warm);
+  background:var(--glow);
+}
+.time-slot.selected{
+  background:var(--warm);border-color:var(--warm);
+  color:#e2eaf2;font-weight:500;
+}
+.time-slot.taken{
+  background:rgba(226,234,242,.4);
+  color:rgba(118,135,153,.45);
+  cursor:default;text-decoration:line-through;
+  border-color:rgba(86,137,188,.1);
+}
+
+/* ── FORM ── */
+.form-group{margin-bottom:15px;}
+.form-label{
+  font-size:12px;color:var(--muted);
+  margin-bottom:7px;display:block;
+  letter-spacing:.5px;font-weight:300;
+}
+.form-label span{color:var(--orange);margin-left:2px;}
+.form-input{
+  width:100%;
+  border:none;
+  border-bottom:1px solid var(--border);
+  padding:9px 2px;font-size:14px;
+  font-family:'Noto Serif TC',serif;
+  color:var(--ink);
+  background:transparent;
+  outline:none;
+  transition:border-color .2s;
+  font-weight:300;
+}
+.form-input:focus{border-bottom-color:var(--warm);}
+.form-input::placeholder{color:var(--muted);opacity:.6;}
+.form-select{
+  width:100%;
+  border:none;
+  border-bottom:1px solid var(--border);
+  padding:9px 22px 9px 2px;font-size:14px;
+  font-family:'Noto Serif TC',serif;
+  color:var(--ink);
+  background:transparent;
+  outline:none;
+  appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239b8a74' stroke-width='1.2' fill='none'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 4px center;
+  cursor:pointer;transition:border-color .2s;
+  font-weight:300;
+}
+.form-select:focus{border-bottom-color:var(--warm);}
+.form-textarea{
+  width:100%;
+  border:1px solid var(--border);
+  padding:10px 12px;font-size:13px;
+  font-family:'Noto Serif TC',serif;
+  color:var(--ink);
+  background:rgba(226,234,242,.5);
+  outline:none;resize:vertical;min-height:80px;
+  transition:border-color .2s;
+  font-weight:300;margin-top:4px;
+}
+.form-textarea:focus{border-color:var(--warm);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+
+/* ── RADIO ── */
+.radio-group{display:flex;gap:10px;}
+.radio-item{
+  flex:1;border:1px solid var(--border);
+  padding:11px;cursor:pointer;
+  text-align:center;font-size:13px;
+  transition:all .25s;background:var(--surface);
+  font-weight:300;position:relative;overflow:hidden;
+}
+.radio-item::before{
+  content:'';position:absolute;inset:0;
+  background:var(--glow);
+  transform:translateY(101%);
+  transition:transform .3s cubic-bezier(.7,0,.3,1);
+}
+.radio-item:hover::before,.radio-item.selected::before{transform:translateY(0);}
+.radio-item:hover,.radio-item.selected{border-color:var(--warm);}
+.radio-item.selected{color:var(--accent);font-weight:500;}
+.radio-item span{position:relative;z-index:1;}
+
+/* ── CONFIRM ── */
+.confirm-row{
+  display:flex;justify-content:space-between;
+  padding:11px 0;border-bottom:1px solid var(--border);
+  font-size:13px;
+}
+.confirm-row:last-child{border-bottom:none;}
+.confirm-lbl{color:var(--muted);font-weight:300;letter-spacing:.5px;}
+.confirm-val{color:var(--ink);font-weight:400;text-align:right;}
+
+/* ── BUTTONS ── */
+.btn-row{display:flex;gap:10px;margin-top:22px;}
+.btn{
+  flex:1;padding:13px;
+  font-size:13px;font-weight:400;
+  cursor:pointer;
+  border:1px solid var(--border);
+  background:var(--surface);color:var(--muted);
+  font-family:'Noto Serif TC',serif;
+  letter-spacing:1px;
+  transition:all .25s;
+  position:relative;overflow:hidden;
+}
+.btn::before{
+  content:'';position:absolute;inset:0;
+  background:var(--glow);
+  transform:translateX(-101%);
+  transition:transform .35s cubic-bezier(.7,0,.3,1);
+}
+.btn:hover:not(:disabled)::before{transform:translateX(0);}
+.btn:hover:not(:disabled){border-color:var(--warm);color:var(--accent);}
+.btn span{position:relative;z-index:1;}
+.btn.primary{
+  background:var(--ink);border-color:var(--ink);
+  color:#e2eaf2;
+}
+.btn.primary::before{background:var(--accent);}
+.btn.primary:hover:not(:disabled){border-color:var(--accent);color:#e2eaf2;}
+.btn:disabled{opacity:.35;cursor:default;}
+
+/* ── 圓潤化：少一點四四方方、柔和有質感 ── */
+.card{border-radius:18px;box-shadow:0 8px 26px rgba(51,84,117,.07);}
+.type-card{border-radius:16px;}
+.service-item{border-radius:14px;}
+.th-card{border-radius:15px;}
+.time-slot{border-radius:12px;}
+.radio-item{border-radius:13px;}
+.btn{border-radius:14px;}
+.form-textarea{border-radius:14px;}
+.type-card.selected,.service-item.selected,.th-card.selected,.radio-item.selected{box-shadow:0 4px 14px rgba(86,137,188,.18);}
+/* 欄位上方的金色註解(取代格子裡的提示字) */
+.form-hint{font-size:11.5px;color:var(--warm);margin:-2px 0 8px;letter-spacing:.3px;font-weight:300;line-height:1.5;}
+
+/* ── SUCCESS ── */
+.success-wrap{text-align:center;padding:24px 0 8px;}
+.success-icon{
+  width:68px;height:68px;
+  border-radius:50%;border:1px solid var(--warm);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 20px;
+  animation:breathe 5s ease-in-out infinite;
+}
+.success-icon svg{width:32px;height:32px;}
+.success-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:26px;font-weight:300;
+  color:var(--ink);margin-bottom:8px;
+  letter-spacing:1px;
+}
+.success-sub{
+  font-size:13px;color:var(--muted);
+  margin-bottom:22px;font-weight:300;
+  line-height:1.9;
+}
+.booking-summary{
+  background:rgba(226,234,242,.6);
+  border:1px solid var(--border);
+  padding:16px;text-align:left;
+}
+
+/* ── LOADING ── */
+.loading{text-align:center;padding:44px;color:var(--muted);}
+.spinner{
+  width:30px;height:30px;
+  border:2px solid var(--border);
+  border-top-color:var(--warm);
+  border-radius:50%;
+  animation:spin .9s linear infinite;
+  margin:0 auto 14px;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading p{font-size:13px;font-weight:300;letter-spacing:1px;}
+
+/* ── MISC ── */
+.notice{
+  font-size:11px;color:var(--muted);
+  margin-top:10px;font-weight:300;
+  line-height:1.8;letter-spacing:.3px;
+}
+.fade-in{animation:fade .5s ease forwards;}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── DIVIDER ── */
+.warm-divider{
+  width:48px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--warm),transparent);
+  margin:0 auto 20px;
+}
+</style>
+</head>
+<body>
+
+<div class="hd-stripe"><i></i><i></i><i></i><i></i><i></i></div>
+<div class="header">
+  <div class="hd-deco y"></div><div class="hd-deco p"></div>
+  <div class="logo">
+    <img src="icons/logo.png" alt="佐升物理治療所" style="height:44px;width:auto">
+  </div>
+  <div class="header-text">
+    <h1>佐升物理治療所</h1>
+    <p>線上預約系統・手機點點就約好</p>
+  </div>
+  <div class="hd-badge">高雄鳳山・2F</div>
+</div>
+
+<div class="container">
+  <div class="progress" id="progressBar"></div>
+  <div id="mainContent"></div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://qnxuynjpifvjuigvxinf.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFueHV5bmpwaWZ2anVpZ3Z4aW5mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwMDk0ODQsImV4cCI6MjEwMTU4NTQ4NH0.TLfGHAl3xWfTPnk9KJXcbv1uVHPD1DlVUBpoomZm1_A';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const STEPS = ['選擇類型','服務項目','選治療師','選時間','填寫資料','確認送出'];
+const DAYS = ['日','一','二','三','四','五','六'];
+// 班表時段區塊 → 可預約的 30 分鐘起始時段（早診09–11、下午診15–17、晚診18–20）
+const SHIFT_SLOTS = {
+  am:  ['09:00','09:30','10:00','10:30','11:00'],
+  pm:  ['15:00','15:30','16:00','16:30','17:00'],
+  eve: ['18:00','18:30','19:00','19:30','20:00']
+};
+// 治療師某天「實際釋出」的可約時段:有自訂就用自訂,沒有就把班別(早/午/晚)整段展開
+function effSlots(therapistId, wd){
+  const cs = state.customSlots && state.customSlots[therapistId];
+  if(cs && cs[wd]) return [...cs[wd]].sort();
+  const blocks = (state.schedules[therapistId] && state.schedules[therapistId][wd]) || [];
+  const slots = new Set();
+  blocks.forEach(b => (SHIFT_SLOTS[b]||[]).forEach(s => slots.add(s)));
+  return [...slots].sort();
+}
+// 不指定治療師＝當天所有治療師釋出時段的聯集；指定治療師＝只開他釋出的時段
+function availableTimes(date, therapistId){
+  if(!date) return [];
+  const wd = String(date.getDay());            // 0=日 … 6=六
+  if(!therapistId || therapistId===0){
+    const u = new Set();
+    (state.therapists||[]).forEach(th => effSlots(th.id, wd).forEach(t => u.add(t)));
+    return [...u].sort();
+  }
+  return effSlots(therapistId, wd);
+}
+
+// 時段 → 班別(am/pm/eve)對照（模組層，畫面與送出重驗共用）
+const blockOfSlot = {};
+Object.entries(SHIFT_SLOTS).forEach(([b,arr]) => arr.forEach(s => blockOfSlot[s] = b));
+// 這個服務要佔幾個 30 分鐘格：60 分鐘服務(s60)＝2 格，其餘＝1 格
+function slotsNeeded(){ if(state.type==='new') return 2; return state.service && state.service.id==='s60' ? 2 : 1; }   // 初診一律60分鐘
+// 時間字串加減分鐘，回傳 HH:MM
+function addMin(t, mins){
+  const [h,m] = t.split(':').map(Number);
+  const total = h*60+m+mins;
+  return String(Math.floor(total/60)).padStart(2,'0')+':'+String(total%60).padStart(2,'0');
+}
+// 這個起始格是否已過（只在「今天」才擋）
+function isPastStart(t){
+  if(!state.date) return false;
+  if(fmtDate(state.date) !== fmtDate(new Date())) return false;
+  const now = new Date();
+  const [h,min] = t.split(':').map(Number);
+  return now.getHours() > h || (now.getHours()===h && now.getMinutes() >= min);
+}
+// 不指定治療師時：這個 30 分鐘格是否客滿（有排這個班、且還沒被約的治療師＝0 → 客滿）
+function slotFull(t){
+  const wd = String(state.date.getDay());
+  const scheduled = state.therapists.filter(th => effSlots(th.id, wd).includes(t)).map(th => th.id);
+  if(!scheduled.length) return true;                 // 這個班別沒人上 → 不能約
+  let bookedTh = new Set(), unassigned = 0;
+  state.bookedSlots.forEach(s => {
+    if(s.appointment_time.slice(0,5) !== t) return;
+    if(s.therapist_id==null) unassigned++; else bookedTh.add(s.therapist_id);
+  });
+  const freeCount = scheduled.filter(id => !bookedTh.has(id)).length - unassigned;
+  return freeCount <= 0;
+}
+// 單一 30 分鐘格是否已被佔用（依目前治療師選擇）
+function singleSlotTaken(t){
+  const isAny = !state.therapistId || state.therapistId===0;
+  if(isAny) return slotFull(t);
+  return state.bookedSlots.some(s => s.appointment_time.slice(0,5) === t);  // 指定治療師：只看他自己的預約
+}
+// 這個「起始時段」能不能約：要把服務需要的每一格(60分＝連兩格)都檢查（存在、未滿、未過期）
+function startBookable(t){
+  // 規則:釋出時段=可以「開始」的時間;60分的後半格可延用未釋出的收尾格(同班別內),
+  // 例:釋出只到10:30 → 10:30仍可約60分做到11:30,但11:00不能當開始。
+  const slots = availableTimes(state.date, state.therapistId);
+  const need = slotsNeeded();
+  if(!slots.includes(t)) return false;              // 起始格必須有釋出
+  const isAny = !state.therapistId || state.therapistId===0;
+  const startBlock = blockOfSlot[t];
+  for(let i=0;i<need;i++){
+    const tt = addMin(t, i*30);
+    if(blockOfSlot[tt] !== startBlock) return false; // 不能跨班別或超出格線(如17:30/20:30不存在)
+    if(isPastStart(tt)) return false;
+    if(!isAny && state.bookedSlots.some(s => s.appointment_time.slice(0,5) === tt)) return false;  // 指定:他這幾格都要空
+  }
+  if(isAny){
+    if(slotFull(t)) return false;                    // 起始格容量(不指定)
+    // 不指定+60分:要有「同一位」治療師起始格有釋出、且連續兩格都空著
+    if(need > 1){
+      const wd = String(state.date.getDay());
+      const times = []; for(let i=0;i<need;i++) times.push(addMin(t, i*30));
+      const ok = state.therapists.some(th => {
+        if(!effSlots(th.id, wd).includes(t)) return false;
+        return !state.bookedSlots.some(s => s.therapist_id===th.id && times.includes(s.appointment_time.slice(0,5)));
+      });
+      if(!ok) return false;
+    }
+  }
+  return true;
+}
+
+// ===== 出生日期：民國三格(年→月→日)、自動跳格、即時換算西元＋生肖 =====
+const ZODIAC = ['鼠','牛','虎','兔','龍','蛇','馬','羊','猴','雞','狗','豬'];
+function birthBox(){
+  let by='', bm='', bd='', hint='';
+  if(state.birthDate && /^\d{4}-\d{2}-\d{2}$/.test(state.birthDate)){
+    const [Y,M,D] = state.birthDate.split('-').map(Number);
+    by = Y-1911; bm = M; bd = D;
+    hint = `西元 ${Y} 年 ${M} 月 ${D} 日　生肖屬${ZODIAC[((Y-4)%12+12)%12]}`;
+  }
+  const ist = 'text-align:center;padding-left:6px;padding-right:6px';
+  return `
+    <div style="display:flex;align-items:center;gap:6px">
+      <input class="form-input" id="f-by" inputmode="numeric" maxlength="3" data-jump="2" style="${ist}" value="${by}" oninput="onBirthInput(this,'f-bm')"><span style="color:var(--muted);flex-shrink:0">年</span>
+      <input class="form-input" id="f-bm" inputmode="numeric" maxlength="2" style="${ist}" value="${bm}" oninput="onBirthInput(this,'f-bd')"><span style="color:var(--muted);flex-shrink:0">月</span>
+      <input class="form-input" id="f-bd" inputmode="numeric" maxlength="2" style="${ist}" value="${bd}" oninput="onBirthInput(this,null)"><span style="color:var(--muted);flex-shrink:0">日</span>
+    </div>
+    <p id="f-birth-hint" style="margin:6px 0 0;font-size:13px;color:#2e7d32">${hint}</p>`;
+}
+function onBirthInput(el, nextId){
+  const hadSep = /[^0-9]/.test(el.value);              // 打了 / 或空格等分隔 → 直接跳下一格
+  el.value = el.value.replace(/[^0-9]/g,'');
+  const jump = parseInt(el.dataset.jump || el.maxLength, 10);
+  if(nextId && (el.value.length >= jump || (hadSep && el.value.length >= 1))){
+    const n = document.getElementById(nextId); if(n) n.focus();
+  }
+  updateBirth();
+}
+function updateBirth(){
+  const yEl=document.getElementById('f-by'), mEl=document.getElementById('f-bm'), dEl=document.getElementById('f-bd');
+  const hint=document.getElementById('f-birth-hint'); if(!yEl||!hint) return;
+  const y=+yEl.value, m=+mEl.value, d=+dEl.value;
+  const Y=y+1911;
+  // 用 new Date 反查，確認這是真實存在的日期（擋掉 2/31、4/31…）
+  const realDate = (y>0 && m>=1 && m<=12 && d>=1 && d<=31)
+    ? (() => { const dt=new Date(Y, m-1, d); return dt.getFullYear()===Y && dt.getMonth()===m-1 && dt.getDate()===d; })()
+    : false;
+  if(realDate){
+    state.birthDate=`${Y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    hint.style.color='#2e7d32';
+    hint.textContent=`西元 ${Y} 年 ${m} 月 ${d} 日　生肖屬${ZODIAC[((Y-4)%12+12)%12]}`;
+  }else{
+    state.birthDate='';
+    hint.style.color='#c0392b';
+    hint.textContent=(yEl.value||mEl.value||dEl.value)
+      ?((y>0&&m>=1&&m<=12&&d>=1&&d<=31)?'這個日期不存在，請確認生日':'請輸入完整的民國年 / 月 / 日')
+      :'';
+  }
+  if(typeof updateBtn==='function') updateBtn();
+}
+
+const LIFF_ID = 'ZS_LIFF_BOOKING_PLACEHOLDER';
+let lineUserId = null;
+let lineDisplayName = null, linePictureUrl = null;   // 通知卡認人用（頭貼＋LINE名稱）
+
+async function initLiff() {
+  try {
+    await liff.init({ liffId: LIFF_ID });
+    if (liff.isLoggedIn()) {
+      const profile = await liff.getProfile();
+      lineUserId = profile.userId;
+      lineDisplayName = profile.displayName || null;
+      linePictureUrl = profile.pictureUrl || null;
+    } else if (liff.isInClient()) {
+      // 只有在 LINE App 內開啟時才自動登入（才能綁 line_user_id 收推播）；
+      // 一般瀏覽器(Google 搜到、朋友轉貼) 直接匿名預約，不強迫登入 LINE
+      liff.login();
+    }
+  } catch(e) {
+    console.log('LIFF init failed, continuing without LINE ID:', e);
+  }
+}
+
+let state = {
+  step: 0,
+  type: null,
+  service: null,
+  therapistId: null,
+  therapistName: null,
+  date: null,
+  time: null,
+  name: '', phone: '', birthDate: '', discomfortArea: '',
+  discomfortDuration: '', previousPT: '', surgeryHistory: '', otherNotes: '',
+  calMonth: new Date(),
+  therapists: [],
+  schedules: {},
+  bookedSlots: [],
+  savedInfo: false
+};
+
+async function loadTherapists() {
+  const { data, error } = await sb.from('therapists').select('*').order('id');
+  if (data) state.therapists = data;
+  // 載入治療師班表（每週固定），用來決定可預約時段
+  const { data: scheds } = await sb.from('therapist_schedules').select('therapist_id, shifts, custom_slots');
+  state.schedules = {};
+  state.customSlots = {};
+  (scheds||[]).forEach(s => { state.schedules[s.therapist_id] = s.shifts || {}; state.customSlots[s.therapist_id] = s.custom_slots || null; });
+}
+
+// 用 LINE ID 找出病人上次填寫的資料，自動帶入（病人仍可修改）
+async function loadSavedInfo() {
+  if (!lineUserId) return;
+  try {
+    // 走安全窗口 my_saved_info：只能用自己的 LINE ID 查回自己上次填的姓名電話
+    const { data } = await sb.rpc('my_saved_info', { p_line_user_id: lineUserId });
+    if (data && data.length) {
+      if (!state.name)  state.name  = data[0].patient_name  || '';
+      if (!state.phone) state.phone = data[0].patient_phone || '';
+      if (state.name || state.phone) state.savedInfo = true;
+    }
+  } catch(e) { console.log('loadSavedInfo failed:', e); }
+}
+
+// ── 日曆名額點點:載入整月已約時段(只抓時間/治療師,無個資) ──
+async function loadMonthBooked() {
+  const m = state.calMonth;
+  const y = m.getFullYear(), mo = m.getMonth();
+  const from = `${y}-${String(mo+1).padStart(2,'0')}-01`;
+  const to = fmtDate(new Date(y, mo+1, 1));
+  const key = from + '|' + (state.therapistId || 0);
+  if (state._monthKey === key) return;
+  let q = sb.from('appointments')
+    .select('appointment_date, appointment_time, therapist_id')
+    .gte('appointment_date', from).lt('appointment_date', to)
+    .eq('status', 'confirmed');
+  if (state.therapistId) q = q.eq('therapist_id', state.therapistId);
+  const { data } = await q;
+  state.monthBooked = data || [];
+  state._monthKey = key;
+}
+// 某一天還剩幾個可約的30分鐘格(對接名額點點)
+function dayFreeCount(d) {
+  const slots = availableTimes(d, state.therapistId);
+  if (!slots.length) return 0;
+  const ds = fmtDate(d);
+  const rows = (state.monthBooked || []).filter(r => r.appointment_date === ds);
+  if (state.therapistId && state.therapistId !== 0) {
+    const taken = new Set(rows.map(r => r.appointment_time.slice(0,5)));
+    return slots.filter(t => !taken.has(t)).length;
+  }
+  const wd = String(d.getDay());
+  let free = 0;
+  for (const t of slots) {
+    const scheduled = state.therapists.filter(th => effSlots(th.id, wd).includes(t)).length;
+    let bookedTh = new Set(), unassigned = 0;
+    rows.forEach(r => {
+      if (r.appointment_time.slice(0,5) !== t) return;
+      if (r.therapist_id == null) unassigned++; else bookedTh.add(r.therapist_id);
+    });
+    if (scheduled - bookedTh.size - unassigned > 0) free++;
+  }
+  return free;
+}
+async function loadBookedSlots(dateStr, therapistId) {
+  // 只取「時段 + 治療師」兩個欄位，不再撈 note（備註含其他病人個資，不可外洩到前端）。
+  // 註：活動/公休在資料庫存為 status='cancelled'，本查詢只看 confirmed，本來就不會撈到。
+  let q = sb.from('appointments')
+    .select('appointment_time, therapist_id')
+    .eq('appointment_date', dateStr)
+    .eq('status', 'confirmed');
+  if (therapistId) q = q.eq('therapist_id', therapistId);
+  const { data } = await q;
+  state.bookedSlots = data || [];
+}
+
+function fmtDate(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function renderProgress() {
+  const bar = document.getElementById('progressBar');
+  bar.innerHTML = STEPS.slice(0,5).map((s,i) => `
+    ${i>0?`<div class="prog-line ${i<=state.step?'done':''}"></div>`:''}
+    <div class="prog-step">
+      <div class="prog-circle ${i<state.step?'done':i===state.step?'active':''}">${i<state.step?'✓':i+1}</div>
+      <div class="prog-label ${i===state.step?'active':''}">${s}</div>
+    </div>`).join('');
+}
+
+async function render() {
+  renderProgress();
+  const el = document.getElementById('mainContent');
+  el.classList.remove('fade-in');
+  void el.offsetWidth;
+  el.classList.add('fade-in');
+  if (state.step === 0) renderTypeSelect(el);
+  else if (state.step === 1 && state.type === 'return') renderServiceSelect(el);
+  else if ((state.step === 1 && state.type === 'new') || (state.step === 2 && state.type === 'return')) renderTherapistSelect(el);
+  else if ((state.step === 2 && state.type === 'new') || (state.step === 3 && state.type === 'return')) await renderDatetime(el);
+  else if ((state.step === 3 && state.type === 'new') || (state.step === 4 && state.type === 'return')) renderForm(el);
+  else if ((state.step === 4 && state.type === 'new') || (state.step === 5 && state.type === 'return')) renderConfirm(el);
+  else if (state.step === 99) renderSuccess(el);
+}
+
+function renderTypeSelect(el) {
+  el.innerHTML = `
+  <div class="card">
+    <p class="card-title">請選擇就診類型</p>
+    <div class="type-grid">
+      <div class="type-card ${state.type==='new'?'selected':''}" onclick="selectType('new',this)">
+        <div class="type-icon" style="margin-bottom:8px"><img src="icons/new.png?v=2" alt="" style="width:100%;max-width:190px;border-radius:12px"></div>
+        <div class="type-name">初診</div>
+        <div class="type-desc">首次到診・需填問卷</div>
+      </div>
+      <div class="type-card ${state.type==='return'?'selected':''}" onclick="selectType('return',this)">
+        <div class="type-icon" style="margin-bottom:8px"><img src="icons/return.png?v=2" alt="" style="width:100%;max-width:190px;border-radius:12px"></div>
+        <div class="type-name">複診</div>
+        <div class="type-desc">回診治療・快速預約</div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn primary" onclick="nextStep()" ${!state.type?'disabled':''}>
+        <span>下一步</span>
+      </button>
+    </div>
+  </div>`;
+}
+
+function selectType(t, el) {
+  state.type = t;
+  if(el){ el.parentElement.querySelectorAll('.type-card').forEach(c=>c.classList.remove('selected')); el.classList.add('selected'); }
+  enableStepNext();
+}
+// 只啟用當前步驟的「下一步」鈕，不整頁重畫(避免淡入動畫重播=畫面跳動)
+function enableStepNext(){
+  document.querySelectorAll('#mainContent .btn.primary').forEach(b=>{ if((b.getAttribute('onclick')||'').includes('nextStep')) b.disabled=false; });
+}
+function pickRadio(el, field, val){
+  state[field]=val;
+  if(el){ el.parentElement.querySelectorAll('.radio-item').forEach(c=>c.classList.remove('selected')); el.classList.add('selected'); }
+  if(typeof updateBtn==='function') updateBtn();
+}
+
+function renderServiceSelect(el) {
+  const services = [
+    { id:'s30', name:'預約人數一位', time:'', color:'#5689bc' },
+    { id:'s60', name:'預約人數一位以上', time:'', color:'#3b5977' },
+  ];
+  el.innerHTML = `
+  <div class="card">
+    <p class="card-title">選擇預約人數</p>
+    <div class="type-grid">
+      ${services.map(s=>`
+        <div class="type-card ${state.service?.id===s.id?'selected':''}" onclick="selectService(${JSON.stringify(s).replace(/"/g,'&quot;')},this)">
+          <div class="type-icon" style="margin-bottom:8px"><img src="${s.id==='s30'?'icons/one.png':'icons/multi.png'}" alt="" style="width:100%;max-width:190px;border-radius:12px"></div>
+          <div class="type-name" style="font-size:17px">${s.name}</div>
+        </div>`).join('')}
+    </div>
+    <div class="btn-row">
+      <button class="btn" onclick="prevStep()"><span>上一步</span></button>
+      <button class="btn primary" onclick="nextStep()" ${!state.service?'disabled':''}><span>下一步</span></button>
+    </div>
+  </div>`;
+}
+
+function selectService(s, el) {
+  state.service = s;
+  if(el){ el.parentElement.querySelectorAll('.type-card,.service-item').forEach(c=>c.classList.remove('selected')); el.classList.add('selected'); }
+  enableStepNext();
+}
+
+function renderTherapistSelect(el) {
+  if (!state.therapists.length) {
+    el.innerHTML = '<div class="loading"><div class="spinner"></div><p>載入治療師資料中</p></div>';
+    loadTherapists().then(() => render());
+    return;
+  }
+  const warmPalette = [
+    {bg:'rgba(86,137,188,.15)',color:'#3b5977'},
+    {bg:'rgba(59,89,119,.15)',color:'#5689bc'},
+    {bg:'rgba(47,128,210,.12)',color:'#2f80d2'},
+    {bg:'rgba(19,30,41,.1)',color:'#768799'},
+  ];
+  el.innerHTML = `
+  <div class="card">
+    <p class="card-title">選擇治療師</p>
+    <div class="therapist-grid" style="gap:26px 14px;margin-top:6px">
+      <div class="th-card ${state.therapistId===0?'selected':''}" style="grid-column:1/-1;padding:0;min-height:96px;background:#d4e6f9" onclick="selectTherapist(0,'不指定',this)">
+        <div style="width:33.3%;align-self:stretch;position:relative;flex-shrink:0;z-index:1"><img src="icons/any.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;z-index:1;padding:14px 12px;text-align:center">
+          <div class="th-name" style="font-size:20px;font-weight:500">不指定治療師</div>
+          <div class="th-spec">治療所幫我安排</div>
+        </div>
+      </div>
+      ${state.therapists.map((t,i)=>{
+        const p = warmPalette[i % warmPalette.length];
+        return `
+        <div style="position:relative;min-height:100px;cursor:pointer" onclick="selectTherapist(${t.id},'${t.name}',this)">
+          <div class="th-card glove ${state.therapistId===t.id?'selected':''}">
+            <div style="flex:1;position:relative;z-index:1">
+              <div class="th-name" style="font-size:20px;font-weight:500;white-space:nowrap"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${t.color||'#5689bc'};margin-right:8px;vertical-align:2px"></span>${t.name}<span style="font-size:11px;color:var(--muted);margin-left:6px;font-weight:300">治療師</span></div>
+              <div style="height:4px;border-radius:2px;margin-top:8px;width:90%;background:linear-gradient(90deg,${t.color||'#5689bc'}59,transparent)"></div>
+            </div>
+          </div>
+          <div class="th-avatar glove-avatar" style="background:var(--surface);background-image:linear-gradient(${p.bg},${p.bg});color:${p.color};border:1.5px solid ${state.therapistId===t.id?'var(--warm)':'var(--border)'}">${t.name[0]}<img src="th_photos/${t.id}.jpg?v=10" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%;z-index:2" onerror="this.remove()"></div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="btn-row">
+      <button class="btn" onclick="prevStep()"><span>上一步</span></button>
+      <button class="btn primary" onclick="nextStep()" ${state.therapistId===null?'disabled':''}><span>下一步</span></button>
+    </div>
+  </div>`;
+}
+
+function selectTherapist(id, name, el) {
+  state.therapistId = id; state.therapistName = name;
+  if(el){
+    const grid = el.closest('.therapist-grid') || el.parentElement;
+    grid.querySelectorAll('.th-card').forEach(c=>c.classList.remove('selected'));
+    grid.querySelectorAll('.th-avatar.glove-avatar').forEach(a=>a.style.borderColor='var(--border)');
+    // 拳套卡的點擊掛在外層包裝,真正要亮的是裡面的卡片
+    const card = el.classList.contains('th-card') ? el : el.querySelector('.th-card');
+    if(card) card.classList.add('selected');
+    const av = el.querySelector ? el.querySelector('.glove-avatar') : null;
+    if(av) av.style.borderColor = 'var(--warm)';
+  }
+  enableStepNext();
+}
+
+async function renderDatetime(el) {
+  // 先立刻畫(不等資料,避免畫面多跳一下),名額資料到貨後再靜靜補畫點點
+  renderDatetimeInner(el);
+  const before = state._monthKey;
+  await loadMonthBooked();
+  if (state.date) {
+    await loadBookedSlots(fmtDate(state.date), state.therapistId || null);
+  }
+  if (state._monthKey !== before || state.date) renderDatetimeInner(el);
+}
+// 同步重畫日期時段區(不轉圈圈、不重播淡入)，給選日期/換月直接呼叫＝不跳動
+function renderDatetimeInner(el) {
+  const m = state.calMonth;
+  const year = m.getFullYear(), month = m.getMonth();
+  const first = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  const isThisMonth = today.getFullYear()===year && today.getMonth()===month;
+  let calHtml = `
+  <div class="cal-wrap">
+  <div class="cal-deco cal-deco-y"></div><div class="cal-deco cal-deco-p"></div>
+  <div class="cal-header">
+    <button class="cal-nav nav-prev" onclick="prevMonth()">‹</button>
+    <span class="cal-title">${year} 年 ${month+1} 月${isThisMonth?`<span class="today-pill">今天 ${today.getMonth()+1}/${today.getDate()}</span>`:''}</span>
+    <button class="cal-nav nav-next" onclick="nextMonth()">›</button>
+  </div>
+  <div class="cal-grid">
+    ${DAYS.map((d,i)=>`<div class="cal-day-lbl ${i===0?'sun':i===6?'sat':''}">${d}</div>`).join('')}
+    ${Array(first).fill('<div></div>').join('')}
+    ${Array.from({length:daysInMonth},(_,i)=>{
+      const d = new Date(year,month,i+1);
+      const isPast = d < today;
+      const isSun = d.getDay()===0;
+      const isToday = d.toDateString()===today.toDateString();
+      const sel = state.date && fmtDate(state.date)===fmtDate(d);
+      const free = (isPast||isSun) ? 0 : dayFreeCount(d);
+      const off = isPast || isSun || free===0;
+      // 名額點點:綠=充足(依剩餘量1~3顆)、橘=剩少量
+      let extra='';
+      if(sel) extra='<span class="cd-sub">已選</span>';
+      else if(isToday&&!off) extra='<span class="cd-sub">今天</span>';
+      else if(!off){
+        const g = free>=4;
+        const n = g ? (free>=12?3:free>=7?2:1) : 1;
+        extra=`<span class="cd-dots">${Array(n).fill(`<i class="${g?'g':'o'}"></i>`).join('')}</span>`;
+      }
+      return `<div class="cal-day2 ${off?'off':''} ${isSun?'sun':''} ${sel?'sel':''} ${isToday&&!sel?'today':''}" onclick="${off?'':'selectDate('+year+','+month+','+(i+1)+')'}"><span class="cd-num">${i+1}</span>${extra}</div>`;
+    }).join('')}
+  </div>
+  <div class="cal-legend"><span><span class="lg-dot g"></span>名額充足</span><span><span class="lg-dot o"></span>剩少量名額</span><span><span class="lg-gray">灰字</span>休診/不可約</span></div>
+  </div>`;
+
+  const slots = availableTimes(state.date, state.therapistId);
+  const is60 = slotsNeeded() === 2;
+  const timeHtml = state.date ? `
+  <div class="card" style="margin-top:0">
+    <p class="card-title">${state.date.getMonth()+1} 月 ${state.date.getDate()} 日 可用時段</p>
+    ${slots.length ? `<div class="time-grid">
+      ${slots.map(t=>{
+        const ok = startBookable(t);   // 60 分鐘服務會自動要求連兩格皆空、且排除各班最後一格
+        return `<div class="time-slot ${ok?'':'taken'} ${state.time===t?'selected':''}" onclick="${ok?'selectTime(\''+t+'\',this)':''}">${t}</div>`;
+      }).join('')}
+    </div>
+    <p class="notice">已劃線時段不可預約${is60?'（60 分鐘服務需連續兩個時段皆空）':''}</p>`
+    : `<p class="notice" style="text-align:center;padding:18px 4px;line-height:1.7">這天${state.therapistId&&state.therapistId!==0?'這位治療師沒有排班':'目前沒有治療師排班'}<br>請改選其他日期或治療師 🙏</p>`}
+  </div>` : '';
+
+  el.innerHTML = `
+  <div class="card">${calHtml}</div>
+  ${timeHtml}
+  <div class="btn-row">
+    <button class="btn" onclick="prevStep()"><span>上一步</span></button>
+    <button class="btn primary" onclick="nextStep()" ${!state.date||!state.time?'disabled':''}><span>下一步</span></button>
+  </div>`;
+}
+
+async function selectDate(y,m,d) {
+  state.date = new Date(y,m,d); state.time = null;
+  await renderDatetime(document.getElementById('mainContent'));
+}
+function selectTime(t, el) {
+  state.time = t;
+  if(el){ el.parentElement.querySelectorAll('.time-slot').forEach(c=>c.classList.remove('selected')); el.classList.add('selected'); }
+  enableStepNext();
+}
+async function prevMonth() { state.calMonth = new Date(state.calMonth.getFullYear(), state.calMonth.getMonth()-1,1); await loadMonthBooked(); renderDatetimeInner(document.getElementById('mainContent')); }
+async function nextMonth() { state.calMonth = new Date(state.calMonth.getFullYear(), state.calMonth.getMonth()+1,1); await loadMonthBooked(); renderDatetimeInner(document.getElementById('mainContent')); }
+
+function renderForm(el) {
+  const isNew = state.type === 'new';
+  if (!isNew) {
+    el.innerHTML = `
+  <div class="card">
+    <p class="card-title">填寫預約資料</p>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">姓名<span>*</span></label>
+        <input class="form-input" id="f-name" value="${state.name}" oninput="state.name=this.value;updateBtn()">
+      </div>
+      <div class="form-group">
+        <label class="form-label">聯絡電話<span>*</span></label>
+        <input class="form-input" id="f-phone" type="tel" value="${state.phone}" oninput="state.phone=this.value;updateBtn()">
+      </div>
+    </div>
+    ${state.savedInfo?`<p class="notice" style="margin-top:-6px;margin-bottom:12px;color:var(--warm)">✓ 已帶入您上次的資料，如有變動可直接修改</p>`:''}
+    <div class="form-group">
+      <p class="notice" style="margin-bottom:8px;color:var(--warm)">如是幫年長者或親友預約，請在備註欄註明代約人的姓名、關係、電話，謝謝 🙏</p>
+      <label class="form-label">備註（選填）</label>
+      <textarea class="form-textarea" placeholder="如有特殊需求請填寫..." oninput="state.otherNotes=this.value">${state.otherNotes}</textarea>
+    </div>
+    <div class="btn-row">
+      <button class="btn" onclick="prevStep()"><span>上一步</span></button>
+      <button class="btn primary" id="formNextBtn" onclick="nextStep()"><span>下一步</span></button>
+    </div>
+  </div>`;
+    updateBtn();
+    return;
+  }
+  const rerender = "renderForm(document.getElementById('mainContent'))";
+  el.innerHTML = `
+  <div class="card q-card">
+    <div class="q-deco1"></div><div class="q-deco2"></div>
+    <div class="q-head">
+      <div class="q-icon">📋</div>
+      <span class="q-title">初診問卷</span>
+      <span class="q-pill">約 1 分鐘完成</span>
+    </div>
+
+    <div class="q-sec"><span class="q-num" style="background:#6b8e4e">1</span>基本資料<span class="q-line"></span></div>
+    <div class="q-three">
+      <div class="q-plain g">
+        <div class="q-label">姓名 <span class="req">*</span></div>
+        <input id="f-name" placeholder="請輸入姓名" value="${state.name}" oninput="state.name=this.value;updateBtn()">
+      </div>
+      <div class="q-plain g stack">
+        <div class="q-label">出生年月日（民國）<span class="req">*</span></div>
+        ${birthBox()}
+      </div>
+      <div class="q-plain g">
+        <div class="q-label">性別 <span class="req">*</span></div>
+        <div class="q-pills" style="margin-top:2px">
+          <div class="q-pillbtn ${state.gender==='男'?'on-yes':''}" style="padding:7px 0" onclick="state.gender='男';${rerender}">男${state.gender==='男'?' ✓':''}</div>
+          <div class="q-pillbtn ${state.gender==='女'?'on-yes':''}" style="padding:7px 0" onclick="state.gender='女';${rerender}">女${state.gender==='女'?' ✓':''}</div>
+        </div>
+      </div>
+    </div>
+    ${state.savedInfo?`<p class="notice" style="margin:-4px 2px 10px;color:var(--warm);position:relative;z-index:1">✓ 已帶入您上次的資料，如有變動可直接修改</p>`:''}
+    <div class="q-plain g">
+      <div class="q-label">聯絡電話 <span class="req">*</span></div>
+      <input id="f-phone" type="tel" placeholder="09xx-xxx-xxx" value="${state.phone}" oninput="state.phone=this.value;updateBtn()">
+    </div>
+
+    <div class="q-sec"><span class="q-num" style="background:#d98a2b">2</span>不適狀況<span class="q-line"></span></div>
+    <div class="q-plain o">
+      <div class="q-label">主要不適部位 <span class="req">*</span><span class="q-eg">例：右肩、下背、左膝</span></div>
+      <input id="f-area" placeholder="直接打字輸入" value="${String(state.discomfortArea||'').replace(/"/g,'&quot;')}" oninput="state.discomfortArea=this.value;updateBtn()">
+    </div>
+    <div class="q-two">
+      <div class="q-plain o">
+        <div class="q-label">不適時間多久了？<span class="req">*</span></div>
+        <select id="f-dur" onchange="state.discomfortDuration=this.value;updateBtn()">
+          <option value="">請選擇...</option>
+          <option ${state.discomfortDuration==='1週內'?'selected':''}>1週內</option>
+          <option ${state.discomfortDuration==='1個月內'?'selected':''}>1個月內</option>
+          <option ${state.discomfortDuration==='3個月內'?'selected':''}>3個月內</option>
+          <option ${state.discomfortDuration==='超過3個月'?'selected':''}>超過3個月</option>
+        </select>
+      </div>
+      <div class="q-plain o">
+        <div class="q-label">曾接受過物理治療？<span class="req">*</span></div>
+        <div class="q-pills">
+          <div class="q-pillbtn ${state.previousPT==='是'?'on-yes':''}" onclick="state.previousPT='是';${rerender}">是${state.previousPT==='是'?' ✓':''}</div>
+          <div class="q-pillbtn ${state.previousPT==='否'?'on-yes':''}" onclick="state.previousPT='否';${rerender}">否${state.previousPT==='否'?' ✓':''}</div>
+        </div>
+      </div>
+    </div>
+    <div class="q-plain o">
+      <div class="q-label">是否有手術史？</div>
+      <div class="q-pills">
+        <div class="q-pillbtn ${state.surgeryHistory==='是'?'on-no':''}" onclick="state.surgeryHistory='是';${rerender}">是${state.surgeryHistory==='是'?' ✓':''}</div>
+        <div class="q-pillbtn ${state.surgeryHistory==='否'?'on-no':''}" onclick="state.surgeryHistory='否';${rerender}">否${state.surgeryHistory==='否'?' ✓':''}</div>
+      </div>
+    </div>
+
+    <div class="q-sec"><span class="q-num" style="background:#5b8a94">3</span>其他說明（選填）<span class="q-line"></span></div>
+    <div class="q-proxy"><span class="q-bang">!</span><span>幫年長者或親友預約，請在下方註明代約人的姓名、關係、電話，謝謝 🙏</span></div>
+    <div class="q-plain b">
+      <textarea rows="3" placeholder="其他症狀、特殊需求或代約人資訊" oninput="state.otherNotes=this.value">${state.otherNotes}</textarea>
+    </div>
+
+    <div class="btn-row" style="position:relative;z-index:1">
+      <button class="btn" onclick="prevStep()"><span>上一步</span></button>
+      <button class="btn primary" id="formNextBtn" onclick="nextStep()"><span>下一步</span></button>
+    </div>
+  </div>`;
+  updateBtn();
+}
+
+function updateBtn() {
+  const btn = document.getElementById('formNextBtn');
+  if (!btn) return;
+  const isNew = state.type === 'new';
+  const ok = state.name && state.phone &&
+    (!isNew || (state.birthDate && state.gender && state.discomfortArea && state.discomfortDuration && state.previousPT));
+  btn.disabled = !ok;
+}
+
+function renderConfirm(el) {
+  const d = state.date;
+  const rows = [
+    ['就診類型', state.type==='new'?'初診':'複診'],
+    state.type==='return'?['服務項目', state.service?.name+' ('+state.service?.time+')']:null,
+    ['治療師', state.therapistId===0?'不指定（系統安排）':state.therapistName+' 治療師'],
+    ['日期', `${d.getFullYear()} 年 ${d.getMonth()+1} 月 ${d.getDate()} 日（${DAYS[d.getDay()]}）`],
+    ['時間', state.time],
+    ['姓名', state.name],
+    ['電話', state.phone],
+    state.type==='new'&&state.discomfortArea?['不適部位', state.discomfortArea]:null,
+    state.otherNotes?['備註', state.otherNotes]:null,
+  ].filter(Boolean);
+
+  const isNew = state.type === 'new';
+  let mgBirth = '';
+  if (state.birthDate && /^\d{4}-\d{2}-\d{2}$/.test(state.birthDate)) {
+    const [Y,M,D] = state.birthDate.split('-').map(Number);
+    mgBirth = `民國 ${Y-1911} 年 ${M} 月 ${D} 日`;
+  }
+  el.innerHTML = `
+  <div class="card q-card">
+    <div class="q-deco1"></div><div class="q-deco2"></div>
+    <div class="cf-head">
+      <div class="cf-icon">✓</div>
+      <span class="cf-title">確認預約內容</span>
+      <span class="cf-pill">最後一步！</span>
+    </div>
+
+    <div class="cf-sum">
+      <div class="cf-cal">
+        <div class="m">${d.getMonth()+1} 月</div>
+        <div class="d">${d.getDate()}</div>
+        <div class="w">週${DAYS[d.getDay()]}</div>
+      </div>
+      <div class="cf-time">
+        <div class="t">${state.time}<span class="cf-type ${isNew?'':'rt'}">${isNew?'初診':'複診'}</span></div>
+        <div class="th">治療師：${state.therapistId===0?'不指定（系統安排）':state.therapistName+' 治療師'}${!isNew&&state.service?'・'+state.service.name:''}</div>
+      </div>
+      <div class="cf-clinic">佐升物理治療所<br>高雄市鳳山區文龍東路276號2樓</div>
+    </div>
+
+    <div class="cf-info">
+      ${isNew?`
+      <div class="cf-trio">
+        <div><span class="cf-lbl">姓名</span><span class="cf-val">${state.name}</span></div>
+        <div><span class="cf-lbl">出生年月日</span><span class="cf-val">${mgBirth||'—'}</span></div>
+        <div><span class="cf-lbl">性別</span><span class="cf-val">${state.gender||'—'}</span></div>
+      </div>`:`
+      <div class="cf-row"><span class="cf-lbl">姓名</span><span class="cf-val">${state.name}</span></div>`}
+      <div class="cf-row"><span class="cf-lbl">電話</span><span class="cf-val">${state.phone}</span></div>
+      ${isNew&&state.discomfortArea?`<div class="cf-row"><span class="cf-lbl">不適部位</span><span class="cf-val">${state.discomfortArea}</span></div>`:''}
+      ${state.otherNotes?`<div class="cf-row"><span class="cf-lbl">備註</span><span class="cf-val">${state.otherNotes}</span></div>`:''}
+    </div>
+
+    <div class="q-proxy"><span class="q-bang">!</span><span>送出後將由診所以 LINE 或電話確認預約；如需取消，請提前 24 小時告知，謝謝！</span></div>
+
+    <div class="btn-row" style="position:relative;z-index:1">
+      <button class="btn" onclick="prevStep()"><span>修改</span></button>
+      <button class="btn primary" id="submitBtn" onclick="submitBooking()"><span>確認送出</span></button>
+    </div>
+  </div>`;
+}
+
+async function submitBooking() {
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span>送出中…</span>';
+
+  try {
+    // 送出前重新抓一次最新佔用，避免停在確認頁太久，時段已被別人約走或已過期
+    await loadBookedSlots(fmtDate(state.date), state.therapistId || null);
+    if (!startBookable(state.time)) {
+      alert('抱歉，這個時段剛剛被約走或已經過了 🙏\n請重新選擇其他時段。');
+      state.time = null;
+      state.step = state.type === 'new' ? 2 : 3;   // 帶回「選時間」步驟
+      render();
+      return;
+    }
+
+    const therapistId = state.therapistId === 0 ? null : state.therapistId;
+    // 60 分鐘服務佔連續兩個 30 分鐘格，各寫一列（與後台「連續格＝同一筆」的表示法一致）
+    const need = slotsNeeded();
+    const rows = [];
+    for (let i = 0; i < need; i++) {
+      rows.push({
+        therapist_id: therapistId,
+        patient_name: state.name,
+        patient_phone: state.phone,
+        appointment_date: fmtDate(state.date),
+        appointment_time: addMin(state.time, i*30) + ':00',
+        type: state.type,
+        service: (state.service?.name || (state.type==='new'?'初診評估':'複診')) + (i>0?'（續）':''),
+        symptoms: state.discomfortArea || '',
+        note: state.otherNotes || '',
+        line_user_id: lineUserId || null,
+        line_display_name: lineDisplayName || null,
+        line_picture_url: linePictureUrl || null,
+        therapist_name: state.therapistId === 0 ? '不指定' : (state.therapistName || null)
+      });
+    }
+    // 走資料庫的交易式窗口 submit_booking：預約單＋初診問卷＋病歷一次寫入，
+    // 全部成功才算數；資料庫端也會再擋一次「同治療師同時段已有人」（回 SLOT_TAKEN）
+    const intake = state.type === 'new' ? {
+      birth_date: state.birthDate || null,
+      gender: state.gender || null,
+      discomfort_area: state.discomfortArea,
+      discomfort_duration: state.discomfortDuration,
+      previous_pt: state.previousPT,
+      surgery_history: state.surgeryHistory,
+      other_notes: state.otherNotes
+    } : null;
+    const { error } = await sb.rpc('submit_booking', { p_rows: rows, p_intake: intake });
+
+    if (error) {
+      if ((error.message||'').includes('SLOT_TAKEN')) {
+        alert('抱歉，這個時段剛剛被約走了 🙏\n請重新選擇其他時段。');
+        state.time = null;
+        state.step = state.type === 'new' ? 2 : 3;
+        render();
+        return;
+      }
+      // 防亂約：同一人同一天已有預約
+      if ((error.message||'').includes('DAILY_LIMIT')) {
+        alert('你這一天已經有一筆預約囉 😊\n如需調整時間，請到 LINE 選單「預約資訊」查詢或取消原本的預約，\n或直接在聊天室留言，我們幫你安排。');
+        btn.disabled = false;
+        btn.innerHTML = '<span>確認送出</span>';
+        return;
+      }
+      // 防亂約：同一電話未來有效預約已達上限
+      if ((error.message||'').includes('BOOKING_LIMIT')) {
+        alert('你目前已有 3 筆預約囉 😊\n如需安排更多時段，歡迎直接在聊天室留言，我們幫你處理。');
+        btn.disabled = false;
+        btn.innerHTML = '<span>確認送出</span>';
+        return;
+      }
+      throw error;
+    }
+
+    state.step = 99;
+    render();
+  } catch(e) {
+    alert('送出失敗，請稍後再試。錯誤：' + e.message);
+    btn.disabled = false;
+    btn.innerHTML = '<span>確認送出</span>';
+  }
+}
+
+// 設計預覽用:網址帶 ?preview=new 或 ?preview=return 直接看成功頁(純畫面,不寫任何資料)
+if (location.search.includes('preview=')) {
+  window.addEventListener('load', () => {
+    state.type = location.search.includes('preview=new') ? 'new' : 'return';
+    state.date = new Date(); state.time = '19:30';
+    state.name = '王小明'; state.therapistId = 0; state.step = 99;
+    setTimeout(() => render(), 400);
+  });
+}
+function renderSuccess(el) {
+  const d = state.date;
+  const isNew = state.type === 'new';
+  el.innerHTML = `
+  <div class="card q-card">
+    <div class="q-deco1 ${isNew?'':'pk'}"></div><div class="q-deco2"></div>
+    <div class="sc-wrap">
+      <div class="sc-circle ${isNew?'nw':'rt'}">
+        <svg viewBox="0 0 32 32" width="40" height="40" fill="none"><path d="M7 17l7 7 11-13" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <p class="sc-title">預約成功！</p>
+      <p class="sc-sub">可隨時至 LINE 選單「預約資訊」查詢或取消<br>預約前一天晚上會傳 LINE 提醒您</p>
+
+      <div class="sc-card">
+        <div class="cf-cal ${isNew?'':'rt'}">
+          <div class="m">${d.getMonth()+1} 月</div>
+          <div class="d">${d.getDate()}</div>
+          <div class="w">週${DAYS[d.getDay()]}</div>
+        </div>
+        <div class="cf-time">
+          <div class="t">${state.time}<span class="cf-type ${isNew?'':'rt'}">${isNew?'初診':'複診'}</span></div>
+          <div class="th">${state.name}・治療師${state.therapistId===0?'不指定':' '+state.therapistName}</div>
+          ${!isNew?`<div class="th" style="margin-top:2px">高雄市鳳山區文龍東路276號2樓</div>`:''}
+        </div>
+      </div>
+
+      ${isNew?`
+      <div class="sc-flow">
+        <div class="sc-flow-title"><span class="sc-bang">!</span>初診當天流程，再提醒一次</div>
+        <div class="sc-opts">
+          <div class="sc-opt gg">
+            <img src="icons/dxbook.png" alt="">
+            <div class="h">有診斷書</div>
+            <div class="d">攜帶診斷書<br>直接上 2F</div>
+            <div class="fee">掛號費 200 元</div>
+          </div>
+          <div class="sc-or">或</div>
+          <div class="sc-opt yy">
+            <img src="icons/dexing.png" alt="">
+            <div class="h">沒有診斷書</div>
+            <div class="d">先 1F 德杏中醫<br>再上 2F 治療</div>
+            <div class="fee">只付中醫掛號費</div>
+          </div>
+        </div>
+        <div class="sc-band blue"><span class="sc-cash">$</span>單次治療 1500–2000 元・依現場評估為準</div>
+        <div class="sc-band pink">診斷書三個月內有效・請提早 10 分鐘報到</div>
+      </div>`:`
+      <div class="q-proxy"><span class="q-bang">!</span><span>直接到診所報到；如需改期或取消，請提前 24 小時告知</span></div>`}
+
+      <div class="btn-row" style="margin-top:18px">
+        <button class="btn" onclick="location.href='https://liff.line.me/ZS_LIFF_STATUS_PLACEHOLDER'"><span>查看我的預約</span></button>
+        <button class="btn primary" onclick="resetBooking()"><span>再次預約</span></button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function nextStep() { state.step++; render(); }
+function prevStep() { state.step--; render(); }
+async function resetBooking() {
+  state = { step:0, type:null, service:null, therapistId:null, therapistName:null,
+    date:null, time:null, name:'', phone:'', birthDate:'', gender:'', discomfortArea:'',
+    discomfortDuration:'', previousPT:'', surgeryHistory:'', otherNotes:'',
+    calMonth:new Date(), therapists:state.therapists, schedules:state.schedules, customSlots:state.customSlots, bookedSlots:[], savedInfo:false };
+  await loadSavedInfo();
+  render();
+}
+
+// LIFF 和治療師資料同時載入，不互相等待
+// ── 即時同步:後台/App 改了班表或釋出時段,前台畫面立刻跟上 ──
+try{
+  sb.channel('sched-rt').on('postgres_changes',{event:'*',schema:'public',table:'therapist_schedules'}, async () => {
+    try{
+      const { data: scheds } = await sb.from('therapist_schedules').select('therapist_id, shifts, custom_slots');
+      state.schedules = {}; state.customSlots = {};
+      (scheds||[]).forEach(s => { state.schedules[s.therapist_id] = s.shifts || {}; state.customSlots[s.therapist_id] = s.custom_slots || null; });
+      const onTime = (state.step===2 && state.type==='new') || (state.step===3 && state.type==='return');
+      if(onTime){ const el = document.getElementById('mainContent'); if(el) renderDatetimeInner(el); }
+    }catch(e){}
+  }).subscribe();
+}catch(e){}
+
+Promise.all([initLiff(), loadTherapists()]).then(async () => {
+  await loadSavedInfo();
+  render();
+});
+</script>
+</body>
+</html>
