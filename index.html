@@ -50,11 +50,11 @@ body::before{
 .hd-stripe i:nth-child(4){background:#438ed9;}
 .hd-stripe i:nth-child(5){background:#428ad3;}
 .header{
-  background:linear-gradient(90deg,#eef0dd,#e7eef5);
+  background:linear-gradient(90deg,#e3ebf4,#dce7f2);
   padding:16px 22px;
   display:flex;align-items:center;gap:16px;
   position:relative;overflow:hidden;
-  border-bottom:1px solid rgba(107,142,78,.15);
+  border-bottom:1px solid rgba(70,105,140,.18);
 }
 .hd-deco{position:absolute;border-radius:50%;pointer-events:none;}
 .hd-deco.y{width:150px;height:150px;background:rgba(111,169,228,.28);right:60px;top:-40px;}
@@ -70,15 +70,15 @@ body::before{
 .header-text{position:relative;z-index:1;flex:1;}
 .header-text h1{
   font-size:20px;font-weight:700;
-  color:#3d5226;letter-spacing:2px;
+  color:#2c4c6b;letter-spacing:2px;
   font-family:'Noto Serif TC',serif;
 }
 .header-text p{
-  font-size:12px;color:#6b8e4e;
+  font-size:12px;color:#5b7a94;
   letter-spacing:1px;margin-top:3px;
 }
 .hd-badge{
-  background:#5a7a40;color:#fff;
+  background:#46698c;color:#fff;
   font-size:12.5px;padding:7px 16px;border-radius:24px;
   white-space:nowrap;position:relative;z-index:1;letter-spacing:1px;
 }
@@ -599,7 +599,7 @@ body::before{
 <div class="header">
   <div class="hd-deco y"></div><div class="hd-deco p"></div>
   <div class="logo">
-    <img src="icons/logo.png" alt="佐升物理治療所" style="height:44px;width:auto">
+    <img src="icons/logo.png" alt="佐升物理治療所" style="height:44px;width:auto" onerror="this.outerHTML='<span style=&quot;font-family:\'Noto Serif TC\',serif;font-size:30px;font-weight:700;color:#46698c;line-height:44px&quot;>佐升</span>'">
   </div>
   <div class="header-text">
     <h1>佐升物理治療所</h1>
