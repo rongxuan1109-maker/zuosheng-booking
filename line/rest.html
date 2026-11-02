@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>休診資訊｜佐升物理治療所</title>
+<style>
+  body{margin:0;background:#EEF4FB;font-family:'Noto Sans TC',-apple-system,sans-serif;color:#2E3644;}
+  .wrap{max-width:560px;margin:0 auto;padding:18px 16px 40px;}
+  .title{background:#fff;border:3px solid #2E3644;border-radius:20px;padding:16px 22px;font-size:22px;
+    font-weight:900;box-shadow:4px 4px 0 #5689BC;}
+  .title-row{display:flex;align-items:center;gap:8px;}
+  .title small{color:#5689BC;font-weight:900;}
+  .title-today{font-size:13px;font-weight:400;color:#6b7f95;margin-top:7px;}
+  .card{background:#fff;border:3px solid #2E3644;border-radius:20px;padding:18px 20px;margin-top:16px;box-shadow:4px 4px 0 rgba(46,54,68,.15);}
+  .card h2{margin:0 0 8px;font-size:17px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .card p{margin:6px 0;font-size:15px;line-height:1.8;}
+  .tag{display:inline-block;background:#3E9B4F;color:#fff;border-radius:99px;padding:4px 15px;font-size:15px;font-weight:900;}
+  .rose{background:#E8556D;}
+  .amber{background:#E9A13B;}
+  .date{font-size:16px;font-weight:900;}
+  .muted{color:#8a7a5c;font-size:13px;}
+  .b{display:inline-block;border-radius:99px;color:#fff;font-size:12px;font-weight:900;padding:2px 10px;margin-right:7px;letter-spacing:1px;}
+  .b-rest{background:#E8556D;}
+  .b-open{background:#3E9B4F;}
+  .dline{font-weight:900;font-size:15px;color:#2E3644;margin:12px 0 4px;}
+  .sline{margin:3px 0;font-size:14px;color:#3A3226;white-space:nowrap;}
+  .shift-chip{display:inline-flex;align-items:center;gap:4px;border:2px solid #2E3644;border-radius:99px;padding:3px 9px 3px 3px;background:#fff;font-size:12px;font-weight:800;color:#2E3644;white-space:nowrap;}
+  .shift-dot{width:19px;height:19px;border-radius:50%;background:#5689BC;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;flex-shrink:0;}
+  a.tel{color:#3F6F9F;font-weight:900;text-decoration:none;}
+  .foot{text-align:center;margin-top:22px;font-size:13px;color:#8a7a5c;}
+  .loading{text-align:center;padding:18px;color:#8a7a5c;font-size:14px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="title">
+    <div class="title-row">🕐 休診資訊 <small>!!</small><span style="margin-left:auto;background:#DCE8F6;color:#3F6F9F;border-radius:99px;padding:3px 12px;font-size:12px;font-weight:900;white-space:nowrap">週日固定公休</span></div>
+    <div class="title-today" id="today"></div>
+  </div>
+
+  <div style="display:flex;flex-wrap:nowrap;justify-content:center;gap:5px;margin:18px 2px 16px">
+    <span class="shift-chip"><span class="shift-dot">早</span>09:00–11:00</span>
+    <span class="shift-chip"><span class="shift-dot">午</span>15:00–17:00</span>
+    <span class="shift-chip"><span class="shift-dot">晚</span>18:00–20:00</span>
+  </div>
+  <div id="live"><div class="card"><div class="loading">查詢最新休診公告中…</div></div></div>
+
+  <div class="foot" style="line-height:2">
+    想確認今天有沒有開？來電 <a class="tel" href="tel:077313123">07-731-3123</a><br>
+    高雄市鳳山區文龍東路276號2樓<br>
+    佐升物理治療所 ♡ 每一次進步，都值得被看見
+  </div>
+</div>
+
+<script>
+const SB = 'https://qnxuynjpifvjuigvxinf.supabase.co';
+const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFueHV5bmpwaWZ2anVpZ3Z4aW5mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwMDk0ODQsImV4cCI6MjEwMTU4NTQ4NH0.TLfGHAl3xWfTPnk9KJXcbv1uVHPD1DlVUBpoomZm1_A';
+const TH = {1:'王佩琪', 2:'劉恕愷'};
+const TH_COLOR = {1:'#8E24AA', 2:'#0B8043'};   // 跟後台一致:王紫 愷綠
+const WD = '日一二三四五六';
+(function(){ var n=new Date(); var el=document.getElementById('today'); if(el) el.textContent='今天 '+(n.getMonth()+1)+'/'+n.getDate()+'（'+WD[n.getDay()]+'）'; })();
+
+function addMin(hm, m){ const [h, mm] = hm.split(':').map(Number); const t = h*60+mm+m; return String(Math.floor(t/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0'); }
+function fmtDate(iso){ const [y,m,d] = iso.split('-').map(Number); return m+'/'+d+'（'+WD[new Date(y,m-1,d).getDay()]+'）'; }
+
+fetch(SB + '/rest/v1/rpc/get_closures', {
+  method: 'POST',
+  headers: {apikey: KEY, Authorization: 'Bearer ' + KEY, 'Content-Type': 'application/json'},
+  body: '{}'
+}).then(r => r.json()).then(rows => {
+  const el = document.getElementById('live');
+  if (!Array.isArray(rows)) throw new Error('bad');
+  // 同一天+同對象+同名稱 = 一則公告
+  const g = {};
+  rows.forEach(r => {
+    const k = r.appointment_date + '|' + (r.therapist_id ?? 'all') + '|' + r.title;
+    if (!g[k]) g[k] = {date: r.appointment_date, th: r.therapist_id, title: r.title, times: []};
+    (r.times || []).forEach(t => g[k].times.push(t));   // get_closures 已彙總:每列一個 times 陣列
+  });
+  if (!Object.keys(g).length) {
+    el.innerHTML = '<div class="card"><h2><span class="tag">近期公告</span></h2><p>目前沒有臨時休診，各治療師依班表正常看診 😊</p></div>';
+    return;
+  }
+  // 每組算出時段文字:45格=整天;否則列出各連續段
+  const entries = Object.values(g);
+  const SHIFTS = [
+    {label:'早診', disp:'9:00–11:30', slots:['09:00','09:30','10:00','10:30','11:00']},
+    {label:'午診', disp:'15:00–17:30', slots:['15:00','15:30','16:00','16:30','17:00']},
+    {label:'晚診', disp:'18:00–20:30', slots:['18:00','18:30','19:00','19:30','20:00']},
+  ];
+  function describe(times) {
+    if (times.length >= 45) return {range:'整天', open:''};
+    const set = new Set(times.map(t=>t.slice(0,5)));
+    const closed = SHIFTS.filter(sh => sh.slots.every(x=>set.has(x)));
+    const cset = new Set(); closed.forEach(sh=>sh.slots.forEach(x=>cset.add(x)));
+    const shiftBased = closed.length>0 && [...set].every(x=>cset.has(x));
+    if (shiftBased) {
+      const range = closed.map(sh=>sh.label).join('、');   // 只用診次名,時間看上方對照表
+      const openShifts = SHIFTS.filter(sh=>!closed.includes(sh));
+      return {range, openText: openShifts.map(sh=>sh.label).join('、')};
+    }
+    // 非整診次(自訂時段)→原始連續段
+    const arr = [...set].sort(); const f = t => t.replace(/^0/,'');
+    const segs = []; let st = arr[0], pv = arr[0];
+    for (let k=1;k<=arr.length;k++){const c=arr[k];if(c!==addMin(pv,30)){segs.push(f(st)+'–'+f(addMin(pv,30)));st=c;}pv=c;}
+    return {range: segs.join('、'), openText:'其餘時段'};
+  }
+  entries.forEach(ev => { ev.times.sort(); const d = describe(ev.times); ev.range = d.range; ev.openText = d.openText; });
+  const nextDay = iso => { const [y,m,d] = iso.split('-').map(Number); const t = new Date(y, m-1, d+1); return t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0'); };
+  // ① 先按治療師→標題→日期排,讓同一人的連續日子相鄰
+  entries.sort((a,b) => ('' + (a.th ?? '~')).localeCompare('' + (b.th ?? '~')) || (a.title||'').localeCompare(b.title||'') || a.date.localeCompare(b.date));
+  // ② 連續多天(同人+同標題+同時段)→併成一個日期區間
+  const ranges = [];
+  for (const ev of entries) {
+    const last = ranges[ranges.length-1];
+    if (last && last.th === ev.th && last.title === ev.title && last.range === ev.range && nextDay(last.dateEnd) === ev.date) last.dateEnd = ev.date;
+    else ranges.push({th: ev.th, title: ev.title, range: ev.range, openText: ev.openText, date: ev.date, dateEnd: ev.date});
+  }
+// ③ 多位治療師、同區間同內容→視為同一筆休診(集合治療師名字)
+  const leaves = [];
+  for (const r of ranges) {
+    const same = leaves.find(l => l.date===r.date && l.dateEnd===r.dateEnd && l.title===r.title && l.range===r.range && (l.ths[0]==null)===(r.th==null));
+    if (same) same.ths.push(r.th);
+    else leaves.push({date:r.date, dateEnd:r.dateEnd, title:r.title, range:r.range, openText:r.openText, ths:[r.th]});
+  }
+  const NTH = Object.keys(TH).length;
+  const setKey = ths => (ths[0]==null || ths.length>=NTH) ? 'ALL' : ths.slice().sort((a,b)=>a-b).join(',');
+  // ④ 同一組治療師的多筆休診→併成一張卡,卡內列多行日期
+  const cardMap = {};
+  for (const lv of leaves) {
+    const k = setKey(lv.ths);
+    if (!cardMap[k]) cardMap[k] = { ths: lv.ths, all: k==='ALL', items: [] };
+    cardMap[k].items.push({date:lv.date, dateEnd:lv.dateEnd, title:lv.title, range:lv.range, openText:lv.openText});
+  }
+  const cards = Object.values(cardMap);
+  cards.forEach(c => c.items.sort((a,b)=>a.date.localeCompare(b.date)||a.dateEnd.localeCompare(b.dateEnd)));
+  cards.sort((a,b)=>a.items[0].date.localeCompare(b.items[0].date));
+  el.innerHTML = cards.map(c => {
+    // 治療師=整塊色標籤(原本版本)
+    let who;
+    if (c.all) {
+      who = '<span class="tag rose">全院休診</span>';
+    } else if (c.ths.length >= 2) {
+      who = '<span class="tag rose">' + c.ths.map(id=>TH[id]||'治療師').join('、') + ' 治療師休診</span>';
+    } else {
+      who = '<span class="tag" style="background:'+(TH_COLOR[c.ths[0]]||'#c08a52')+'">' + (TH[c.ths[0]]||'治療師') + ' 治療師休診</span>';
+    }
+    const lines = c.items.map(it => {
+      const ttl = it.title && !/^(公休|休診|請假)$/.test(it.title) ? '<span style="color:#8a7a5c;font-weight:400;font-size:13px">（'+it.title+'）</span>' : '';
+      const dateTxt = fmtDate(it.date) + (it.dateEnd!==it.date ? ' ～ '+fmtDate(it.dateEnd) : '');
+      const openPart = it.openText ? '　<span class="b b-open">開</span>'+it.openText : '';
+      return '<p class="dline">'+dateTxt+' '+ttl+'</p><p class="sline"><span class="b b-rest">休</span>'+it.range+openPart+'</p>';
+    }).join('');
+    // 其他治療師照常:每張卡都放(全院除外),低調灰字,不用休/開徽章
+    const foot = !c.all ? '<p style="text-align:center;color:#8a7a5c;font-size:12.5px;margin:12px -20px -18px;padding:11px 0;border-top:1px solid #f0e6da;border-radius:0 0 17px 17px">🙂 其他治療師照常看診</p>' : '';
+    return '<div class="card"><h2>'+who+'</h2>'+lines+foot+'</div>';
+  }).join('');
+}).catch(() => {
+  document.getElementById('live').innerHTML = '<div class="card"><p class="muted">公告載入失敗，請稍後再試，或直接來電確認。</p></div>';
+});
+</script>
+</body>
+</html>
