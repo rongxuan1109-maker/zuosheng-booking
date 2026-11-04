@@ -827,7 +827,8 @@ let state = {
 
 async function loadTherapists() {
   const { data, error } = await sb.from('therapists').select('*').order('sort_order',{ascending:true,nullsFirst:false}).order('id');
-  if (data) state.therapists = data;
+  // show_public=false 的是幕後治療師（主管），同步/後台認得、前台不開放預約
+  if (data) state.therapists = data.filter(t => t.show_public !== false);
   // 載入治療師班表（每週固定），用來決定可預約時段
   const { data: scheds } = await sb.from('therapist_schedules').select('therapist_id, shifts, custom_slots');
   state.schedules = {};
