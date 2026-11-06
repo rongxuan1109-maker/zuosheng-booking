@@ -595,7 +595,7 @@ window.trkReceiptBuild=async function(name,bd,pid,roc,now){
     '<button onclick="rcptPrint()" style="background:#2567aa;color:#fff">🖨 列印</button>'+
     '<button onclick="rcptClose()" style="background:#d3dde7;color:#444f5b">✕ 關閉</button></span></div>'+
     '<div id="rcptScroll"><div class="rcpt-doc" id="rcptPaper">'+
-    '<div class="rhd"><img class="rlogo" src="icons/logo.png" onerror="this.remove()">'+
+    '<div class="rhd"><img class="rlogo" src="icons/logo.png?v=2" onerror="this.remove()">'+
     '<h1>佐升物理治療所　費用收據</h1>'+
     '<div class="rlic">執照字號：高市衛醫物楠字第 QY07310058 號</div>'+
     '<div class="rdt">開立日期：民國 <input style="width:34px;text-align:center" value="'+(now.getFullYear()-1911)+'"> 年 <input style="width:24px;text-align:center" value="'+(now.getMonth()+1)+'"> 月 <input style="width:24px;text-align:center" value="'+now.getDate()+'"> 日</div></div>'+
