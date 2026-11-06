@@ -520,6 +520,7 @@ window.rcptEnsureStyle=function(){
       '.rcpt-doc input{border:none !important;border-bottom:1px solid #aab9c8 !important;border-radius:0 !important;background:transparent !important;box-shadow:none !important;padding:0 4px !important;font-size:12.5px;font-family:inherit}'+
       /* 全域皮膚把 input 蓋成圓角實框(!important),收據要壓回底線;列印版連底線都拿掉,印出來只有字沒有框 */
       '#a6print .rcpt-doc input{border:none !important}'+
+      '#a6print .rcpt-doc .rk{display:none !important}'+   /* 列印版不印打勾方格,只留項目名稱 */
       '.rcpt-doc table{width:100%;border-collapse:collapse;font-size:12px}'+
       '.rcpt-doc th,.rcpt-doc td{border:1px solid #3d4956;padding:6px 8px;text-align:left}'+
       '.rcpt-doc th{background:#eef4fa;font-weight:900}'+
