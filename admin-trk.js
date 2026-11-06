@@ -520,10 +520,13 @@ window.rcptEnsureStyle=function(){
       '#rcptScroll,#rcptHistBody{overflow:auto;flex:1;padding:14px}'+
       '.rcpt-doc{background:#fff;padding:20px 22px;box-sizing:border-box;font-family:"Noto Sans TC","PingFang TC",sans-serif;color:#24292f;width:100%}'+
       '.rcpt-doc .rbar{border:none;border-top:2.5px solid #3f75ab;margin:12px 0}'+
-      '.rcpt-doc h1{font-size:19px;letter-spacing:1px;margin:0 0 10px;font-weight:900}'+
-      '.rcpt-doc .rhd{position:relative}'+
-      '.rcpt-doc .rlogo{position:absolute;right:0;top:-4px;height:52px}'+
-      '.rcpt-doc .rlic,.rcpt-doc .rdt{font-size:12.5px;margin:4px 0;font-weight:600}'+
+      '.rcpt-doc h1{font-size:20px;letter-spacing:1px;margin:0;font-weight:900;line-height:1.2}'+
+      '.rcpt-doc .rhd{display:flex;align-items:center}'+
+      '.rcpt-doc .rbrand{display:flex;align-items:center;gap:14px}'+
+      '.rcpt-doc .rlogo{height:84px;flex:none}'+
+      '.rcpt-doc .rsub2{font-size:13px;letter-spacing:3px;color:#3f75ab;font-weight:800;margin:2px 0 4px}'+
+      '.rcpt-doc .rlic{font-size:11.5px;color:#586879;font-weight:600;white-space:nowrap}'+
+      '.rcpt-doc .rdt{font-size:12.5px;font-weight:600;white-space:nowrap;margin-top:2px}'+
       '.rcpt-doc h2{font-size:14px;margin:12px 0 7px;font-weight:900}'+
       '.rcpt-doc .rinfo{font-size:12.5px;line-height:2.3;margin-left:6px}'+
       '.rcpt-doc input{border:none !important;border-bottom:1px solid #aab9c8 !important;border-radius:0 !important;background:transparent !important;box-shadow:none !important;padding:0 4px !important;font-size:12.5px;font-family:inherit}'+
@@ -531,10 +534,12 @@ window.rcptEnsureStyle=function(){
       '#a6print .rcpt-doc input{border:none !important}'+
       '#a6print .rcpt-doc .rk{display:none !important}'+   /* 列印版不印打勾方格,只留項目名稱 */
       /* 列印版放大(2026-11-06 榮軒):A5 紙,字體加大(個人資料特別大)、簽章區加高,螢幕開單畫面不動 */
-      '#a6print .rcpt-doc h1{font-size:21px;margin-bottom:4px}'+
-      '#a6print .rcpt-doc .rlic,#a6print .rcpt-doc .rdt{font-size:13px;margin:1px 0}'+
-      '#a6print .rcpt-doc .rdt input{font-size:15px !important}'+
-      '#a6print .rcpt-doc .rlogo{height:68px;top:-2px}'+
+      '#a6print .rcpt-doc h1{font-size:22px}'+
+      '#a6print .rcpt-doc .rsub2{font-size:14px}'+
+      '#a6print .rcpt-doc .rlic{font-size:11px}'+
+      '#a6print .rcpt-doc .rdt{font-size:12.5px}'+
+      '#a6print .rcpt-doc .rdt input{font-size:14px !important}'+
+      '#a6print .rcpt-doc .rlogo{height:84px}'+   /* LOGO 跟四行文字(名字/副標/執照/日期)等高 */
       '#a6print .rcpt-doc .rbar{margin:4px 0}'+
       '#a6print .rcpt-doc h2{font-size:15px;margin:5px 0 3px}'+
       '#a6print .rcpt-doc .rinfo{font-size:17px;line-height:1.45;font-weight:600}'+
@@ -595,10 +600,11 @@ window.trkReceiptBuild=async function(name,bd,pid,roc,now){
     '<button onclick="rcptPrint()" style="background:#2567aa;color:#fff">🖨 列印</button>'+
     '<button onclick="rcptClose()" style="background:#d3dde7;color:#444f5b">✕ 關閉</button></span></div>'+
     '<div id="rcptScroll"><div class="rcpt-doc" id="rcptPaper">'+
-    '<div class="rhd"><img class="rlogo" src="icons/logo.png?v=2" onerror="this.remove()">'+
-    '<h1>佐升物理治療所　費用收據</h1>'+
+    /* 抬頭(2026-11-06 榮軒):LOGO 跟治療所名字配成一組、費用收據當副標、執照字號收在名字下、開立日期靠右 */
+    '<div class="rhd"><div class="rbrand"><img class="rlogo" src="icons/logo.png?v=2" onerror="this.remove()">'+
+    '<div class="rttl"><h1>佐升物理治療所</h1><div class="rsub2">費 用 收 據</div>'+
     '<div class="rlic">執照字號：高市衛醫物楠字第 QY07310058 號</div>'+
-    '<div class="rdt">開立日期：民國 <input style="width:34px;text-align:center" value="'+(now.getFullYear()-1911)+'"> 年 <input style="width:24px;text-align:center" value="'+(now.getMonth()+1)+'"> 月 <input style="width:24px;text-align:center" value="'+now.getDate()+'"> 日</div></div>'+
+    '<div class="rdt">開立日期：民國 <input style="width:34px;text-align:center" value="'+(now.getFullYear()-1911)+'"> 年 <input style="width:24px;text-align:center" value="'+(now.getMonth()+1)+'"> 月 <input style="width:24px;text-align:center" value="'+now.getDate()+'"> 日</div></div></div></div>'+
     '<hr class="rbar">'+
     '<h2>一、個案基本資料</h2>'+
     '<div class="rinfo"><span class="rfld">姓　　名：<input style="width:110px" value="'+String(name).replace(/"/g,'')+'"></span><span class="rfld">出生年月日：<input style="width:150px" value="'+roc+'"></span><br><span class="rfld">病歷號碼：<input style="width:110px" value="'+pid+'"></span></div>'+
