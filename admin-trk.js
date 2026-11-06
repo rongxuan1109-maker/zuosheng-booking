@@ -520,12 +520,11 @@ window.rcptEnsureStyle=function(){
       '#rcptScroll,#rcptHistBody{overflow:auto;flex:1;padding:14px}'+
       '.rcpt-doc{background:#fff;padding:20px 22px;box-sizing:border-box;font-family:"Noto Sans TC","PingFang TC",sans-serif;color:#24292f;width:100%}'+
       '.rcpt-doc .rbar{border:none;border-top:2.5px solid #3f75ab;margin:12px 0}'+
-      '.rcpt-doc h1{font-size:20px;letter-spacing:1px;margin:0;font-weight:900;line-height:1.2}'+
+      '.rcpt-doc h1{font-size:22px;letter-spacing:1px;margin:0 0 4px;font-weight:900;line-height:1.2;white-space:nowrap}'+
       '.rcpt-doc .rhd{display:flex;align-items:center}'+
       '.rcpt-doc .rbrand{display:flex;align-items:center;gap:14px}'+
-      '.rcpt-doc .rlogo{height:84px;flex:none}'+
-      '.rcpt-doc .rsub2{font-size:13px;letter-spacing:3px;color:#3f75ab;font-weight:800;margin:2px 0 4px}'+
-      '.rcpt-doc .rlic{font-size:11.5px;color:#586879;font-weight:600;white-space:nowrap}'+
+      '.rcpt-doc .rlogo{height:64px;flex:none}'+
+      '.rcpt-doc .rsub2{font-size:inherit;letter-spacing:2px;color:#3f75ab;font-weight:900;margin-left:12px}'+
       '.rcpt-doc .rdt{font-size:12.5px;font-weight:600;white-space:nowrap;margin-top:2px}'+
       '.rcpt-doc h2{font-size:14px;margin:12px 0 7px;font-weight:900}'+
       '.rcpt-doc .rinfo{font-size:12.5px;line-height:2.3;margin-left:6px}'+
@@ -534,12 +533,10 @@ window.rcptEnsureStyle=function(){
       '#a6print .rcpt-doc input{border:none !important}'+
       '#a6print .rcpt-doc .rk{display:none !important}'+   /* 列印版不印打勾方格,只留項目名稱 */
       /* 列印版放大(2026-11-06 榮軒):A5 紙,字體加大(個人資料特別大)、簽章區加高,螢幕開單畫面不動 */
-      '#a6print .rcpt-doc h1{font-size:22px}'+
-      '#a6print .rcpt-doc .rsub2{font-size:14px}'+
-      '#a6print .rcpt-doc .rlic{font-size:11px}'+
+      '#a6print .rcpt-doc h1{font-size:24px}'+
       '#a6print .rcpt-doc .rdt{font-size:12.5px}'+
       '#a6print .rcpt-doc .rdt input{font-size:14px !important}'+
-      '#a6print .rcpt-doc .rlogo{height:84px}'+   /* LOGO 跟四行文字(名字/副標/執照/日期)等高 */
+      '#a6print .rcpt-doc .rlogo{height:66px}'+   /* LOGO 跟兩行文字(名字+費用收據/日期)等高 */
       '#a6print .rcpt-doc .rbar{margin:4px 0}'+
       '#a6print .rcpt-doc h2{font-size:15px;margin:5px 0 3px}'+
       '#a6print .rcpt-doc .rinfo{font-size:17px;line-height:1.45;font-weight:600}'+
@@ -602,17 +599,16 @@ window.trkReceiptBuild=async function(name,bd,pid,roc,now){
     '<div id="rcptScroll"><div class="rcpt-doc" id="rcptPaper">'+
     /* 抬頭(2026-11-06 榮軒):LOGO 跟治療所名字配成一組、費用收據當副標、執照字號收在名字下、開立日期靠右 */
     '<div class="rhd"><div class="rbrand"><img class="rlogo" src="icons/logo.png?v=2" onerror="this.remove()">'+
-    '<div class="rttl"><h1>佐升物理治療所</h1><div class="rsub2">費 用 收 據</div>'+
-    '<div class="rlic">執照字號：高市衛醫物楠字第 QY07310058 號</div>'+
+    '<div class="rttl"><h1>佐升物理治療所<span class="rsub2">費用收據</span></h1>'+
     '<div class="rdt">開立日期：民國 <input style="width:34px;text-align:center" value="'+(now.getFullYear()-1911)+'"> 年 <input style="width:24px;text-align:center" value="'+(now.getMonth()+1)+'"> 月 <input style="width:24px;text-align:center" value="'+now.getDate()+'"> 日</div></div></div></div>'+
     '<hr class="rbar">'+
     '<h2>一、個案基本資料</h2>'+
     '<div class="rinfo"><span class="rfld">姓　　名：<input style="width:110px" value="'+String(name).replace(/"/g,'')+'"></span><span class="rfld">出生年月日：<input style="width:150px" value="'+roc+'"></span><br><span class="rfld">病歷號碼：<input style="width:110px" value="'+pid+'"></span></div>'+
     '<h2>二、費用明細</h2>'+
-    '<table><tr><th>費用明細</th><th class="cqt">數量</th><th class="cam">金額（元）</th></tr>'+body+
+    '<table><tr><th>項目</th><th class="cqt">數量</th><th class="cam">金額（元）</th></tr>'+body+
     '<tr class="rtot"><td>實收總計共</td><td class="cqt"></td><td class="cam rsum">$ <span id="rcptTotal">　</span></td></tr></table>'+
     '<h2>三、簽章</h2>'+
-    '<table class="rsign"><tr><td style="width:50%">物理治療師（簽章）：</td><td>機構大小章：<img src="icons/stamp.png?v=2" alt="" style="height:96px;float:right;margin:4px 14px 4px 0" onerror="this.remove()"></td></tr></table>'+
+    '<table class="rsign"><tr><td>機構大小章：<img src="icons/stamp.png?v=2" alt="" style="height:96px;float:right;margin:4px 14px 4px 0" onerror="this.remove()"></td></tr></table>'+
     '<hr class="rbar">'+
     '<div class="rft"><span>地址：高雄市鳳山區文龍東路276號2樓</span><span>電話：07-7313123</span></div>'+
     '<div class="rnote">收據正本只提供一次，恕不補發，請妥善保存。</div>'+
