@@ -604,8 +604,8 @@ window.trkReceiptBuild=async function(name,bd,pid,roc,now){
     '<hr class="rbar">'+
     '<h2>一、個案基本資料</h2>'+
     '<div class="rinfo"><span class="rfld">姓　　名：<input style="width:110px" value="'+String(name).replace(/"/g,'')+'"></span><span class="rfld">出生年月日：<input style="width:150px" value="'+roc+'"></span><br><span class="rfld">病歷號碼：<input style="width:110px" value="'+pid+'"></span></div>'+
-    '<h2>二、項目</h2>'+
-    '<table><tr><th>項目</th><th class="cqt">數量</th><th class="cam">金額（元）</th></tr>'+body+
+    '<h2>二、治療項目</h2>'+
+    '<table><tr><th>治療項目</th><th class="cqt">數量</th><th class="cam">金額（元）</th></tr>'+body+
     '<tr class="rtot"><td>實收總計共</td><td class="cqt"></td><td class="cam rsum">$ <span id="rcptTotal">　</span></td></tr></table>'+
     '<h2>三、簽章</h2>'+
     '<table class="rsign"><tr><td>機構大小章：<img src="icons/stamp.png?v=2" alt="" style="height:96px;float:right;margin:4px 14px 4px 0" onerror="this.remove()"></td></tr></table>'+
